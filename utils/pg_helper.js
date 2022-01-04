@@ -17,3 +17,37 @@ export const selectSql = async (sql) => {
         }
     })
 }
+
+export const updateSql = async (sql) => {
+    return new Promise((resolve, reject) => {
+        try {
+            postgress.query(sql, function (error, results) {
+                if (error) {
+                    resolve({ status_code: 'tv404', message: error.sqlMessage });
+                } else {
+                    resolve({ status_code: 'tv200', message: 'Success', rows_affected: results.affectedRows });
+                }
+            });
+        } catch (error) {
+            reject('')
+            console.error(`Error occured in addLocation ${error}`);
+        }
+    })
+}
+
+export const insertSql = async (sql) => {
+    return new Promise((resolve, reject) => {
+        try {
+            postgress.query(sql, function (error, results) {
+                if (error) {
+                    resolve({ status_code: 'tv404', message: error.sqlMessage });
+                } else {
+                    resolve({ status_code: 'tv200', message: 'Success', message_id: results.insertId });
+                }
+            });
+        } catch (error) {
+            reject('')
+            console.error(`Error occured in addLocation ${error}`);
+        }
+    })
+}
