@@ -14,8 +14,14 @@ router.get('/getDepartments', async (req,res) => {
     res.send(resp);
 })
 
-router.get('/orgTypes', async (req,res) => {
+router.get('/getOrgTypes', async (req,res) => {
     let sql = `select id,type from reference.org_types`;
+    let resp = await selectSql(sql);
+    res.send(resp);
+})
+
+router.get('/getRoles', async (req,res) => {
+    let sql = `select id,name from reference.roles`;
     let resp = await selectSql(sql);
     res.send(resp);
 })
