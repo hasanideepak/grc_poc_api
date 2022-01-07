@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { selectSql } from './pg_helper.js';
+import { schemaValidator } from './validator_helper.js';
 
 const PUBLIC_API = '';//process.env.PUBLIC_API;
 
@@ -56,4 +57,19 @@ export const validateSession = async (req, res, next) => {
             }
         }
     }
+}
+
+export const schemaValidation = async (req, res, next) => {
+
+    if (req.method == 'POST') {
+        let resp = await schemaValidator(req);
+        if (resp.status_code == 'air200') {
+            next();
+        } else {
+            res.status(401).send(resp);
+        }
+    } else {
+        next();
+    }
+
 }

@@ -8,9 +8,9 @@ export const schemaValidator = async (req) => {
             let subApiName = req.path.replace('/','');
             subApiName = subApiName.split('/')[0];
 
-            if(subApiName == 'updateIndustry' || subApiName == 'postJob' || subApiName == 'uploadSecureDocument' || subApiName == 'uploadProfilePic' || subApiName == 'logout'){
-                resolve({ status_code: 'tv200',message:'Success'});
-            }
+            // if(subApiName == 'updateIndustry' || subApiName == 'postJob' || subApiName == 'uploadSecureDocument' || subApiName == 'uploadProfilePic' || subApiName == 'logout'){
+            //     resolve({ status_code: 'air200',message:'Success'});
+            // }
 
             if(schema[subApiName] != undefined){
 
@@ -18,13 +18,13 @@ export const schemaValidator = async (req) => {
                 
                 try {
                     validatorObj.validate(req.body, schemaObj, { required: true, "throwError": true });
-                    resolve({ status_code: 'tv200',message:'Success'});
+                    resolve({ status_code: 'air200',message:'Success'});
                 } catch (error) {
                     // console.log(error)
-                    resolve({ status_code: 'tv401', message: error['path'] + ' ' + error.message });
+                    resolve({ status_code: 'air401', message: error['path'] + ' ' + error.message });
                 }
         }else{
-            resolve({ status_code: 'tv401',message:'Error occured in schema validation'});
+            resolve({ status_code: 'air401',message:'Error occured in schema validation'});
         }
 
         } catch (error) {
