@@ -7,12 +7,12 @@ import SwaggerJSON from '../swagger/swaggerdoc.js';
 const swaggerOptions = {
   swaggerDefinition: {
     info: {
-      title: 'Truverify Public REST API',
-      description: 'Truverify Public API Information',
+      title: 'GRC REST API',
+      description: 'GRC API Information',
       contact: {
-        name: 'Truverify'
+        name: 'GRC'
       },
-      servers: ['https://qa-api2.truverify.com']
+      // servers: ['https://qa-api2.truverify.com']
     },
     // import swagger documentation
     ...SwaggerJSON()
