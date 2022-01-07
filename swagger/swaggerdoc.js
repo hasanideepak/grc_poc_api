@@ -103,7 +103,7 @@ const SwaggerModels = () => {
       '/reference/getFrameworks': {
         get: {
           tags: [
-            'Frameworks',
+            'Reference',
           ],
           summary: 'Get All Frameworks',
           description: `
@@ -111,6 +111,18 @@ const SwaggerModels = () => {
             Sample Url      : ${baseURL}reference/getFrameworks`,
           produces: [
             'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            }
           ],
           responses: {
             '200': {
@@ -151,7 +163,7 @@ const SwaggerModels = () => {
       '/reference/getDepartments': {
         get: {
           tags: [
-            'Departments',
+            'Reference',
           ],
           summary: 'Get All Departments',
           description: `
@@ -159,6 +171,18 @@ const SwaggerModels = () => {
             Sample Url      : ${baseURL}reference/getDepartments`,
           produces: [
             'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            }
           ],
           responses: {
             '200': {
@@ -199,7 +223,7 @@ const SwaggerModels = () => {
       '/reference/getRoles': {
         get: {
           tags: [
-            'Roles',
+            'Reference',
           ],
           summary: 'Get All Roles',
           description: `
@@ -207,6 +231,18 @@ const SwaggerModels = () => {
             Sample Url      : ${baseURL}reference/getRoles`,
           produces: [
             'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            }
           ],
           responses: {
             '200': {
@@ -247,7 +283,7 @@ const SwaggerModels = () => {
       '/reference/getOrgTypes': {
         get: {
           tags: [
-            'Organizations Types',
+            'Reference',
           ],
           summary: 'Get All Organizations',
           description: `
@@ -255,6 +291,18 @@ const SwaggerModels = () => {
             Sample Url      : ${baseURL}reference/getOrgTypes`,
           produces: [
             'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            }
           ],
           responses: {
             '200': {
