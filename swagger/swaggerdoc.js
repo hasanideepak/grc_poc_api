@@ -280,66 +280,66 @@ const SwaggerModels = () => {
           }
         }
       },
-      '/reference/getOrgTypes': {
-        get: {
-          tags: [
-            'Reference',
-          ],
-          summary: 'Get All Organizations',
-          description: `
-            Description     : Get All Organizations
-            Sample Url      : ${baseURL}reference/getOrgTypes`,
-          produces: [
-            'application/json'
-          ],
-          parameters : [
-            {
-              in: 'header',
-              name: 'Authorization',
-              schema: {
-                type: 'string',
-              },
-              required: 'true',
-              description: 'accessToken provided in the response of login api',
-              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
-            }
-          ],
-          responses: {
-            '200': {
-              description: 'Success!',
-              'schema': {
-                type: 'object',
-                properties: {
-                  status_code: {
-                    type: 'string',
-                    example: 'air200'
-                  },
-                  message: {
-                    type: 'string',
-                    example: 'Success'
-                  },
-                  results: {
-                    type: 'array',
-                    items: {
-                      type: 'object',
-                      properties: {
-                        id: {
-                          type: 'number',
-                          description:'Type ID'
-                        },
-                        name: {
-                          type: 'string',
-                          description:'Type Name'
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
+      // '/reference/getOrgTypes': {
+      //   get: {
+      //     tags: [
+      //       'Reference',
+      //     ],
+      //     summary: 'Get All Organizations',
+      //     description: `
+      //       Description     : Get All Organizations
+      //       Sample Url      : ${baseURL}reference/getOrgTypes`,
+      //     produces: [
+      //       'application/json'
+      //     ],
+      //     parameters : [
+      //       {
+      //         in: 'header',
+      //         name: 'Authorization',
+      //         schema: {
+      //           type: 'string',
+      //         },
+      //         required: 'true',
+      //         description: 'accessToken provided in the response of login api',
+      //         example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+      //       }
+      //     ],
+      //     responses: {
+      //       '200': {
+      //         description: 'Success!',
+      //         'schema': {
+      //           type: 'object',
+      //           properties: {
+      //             status_code: {
+      //               type: 'string',
+      //               example: 'air200'
+      //             },
+      //             message: {
+      //               type: 'string',
+      //               example: 'Success'
+      //             },
+      //             results: {
+      //               type: 'array',
+      //               items: {
+      //                 type: 'object',
+      //                 properties: {
+      //                   id: {
+      //                     type: 'number',
+      //                     description:'Type ID'
+      //                   },
+      //                   name: {
+      //                     type: 'string',
+      //                     description:'Type Name'
+      //                   }
+      //                 }
+      //               }
+      //             }
+      //           }
+      //         }
+      //       }
+      //     }
+      //   }
+      // },
       
     }
   };
