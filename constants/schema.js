@@ -12,6 +12,17 @@ const SCHEMAS = {
             // "message": "Custom message"
         }
     },
+    'addFramework': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "framework_name": {"type":"string","minLength":2}
+            },
+            "required": ["framework_name"],
+            // "message": "Custom message"
+        }
+    },
 
    
 };

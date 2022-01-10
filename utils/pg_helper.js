@@ -23,9 +23,9 @@ export const updateSql = async (sql) => {
         try {
             postgress.query(sql, function (error, results) {
                 if (error) {
-                    resolve({ status_code: 'tv404', message: error.sqlMessage });
+                    resolve({ status_code: 'air404', message: error.sqlMessage });
                 } else {
-                    resolve({ status_code: 'tv200', message: 'Success', rows_affected: results.affectedRows });
+                    resolve({ status_code: 'air200', message: 'Success', rows_affected: results.affectedRows });
                 }
             });
         } catch (error) {
@@ -40,9 +40,9 @@ export const insertSql = async (sql) => {
         try {
             postgress.query(sql, function (error, results) {
                 if (error) {
-                    resolve({ status_code: 'tv404', message: error.sqlMessage });
+                    resolve({ status_code: 'air404', message: error.sqlMessage });
                 } else {
-                    resolve({ status_code: 'tv200', message: 'Success', message_id: results.insertId });
+                    resolve({ status_code: 'air200', message: 'Success', message_id: results.insertId });
                 }
             });
         } catch (error) {

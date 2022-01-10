@@ -15,8 +15,8 @@ const ROUTES = (server) => {
     server.use(express.urlencoded({ extended: true }));
     server.use(cors(corsOptions));
     server.use('/auth',[schemaValidation],auth);
-    server.use('/orgs',orgs);
-    server.use('/reference',[validateSession],reference);
+    server.use('/orgs',[schemaValidation,validateSession],orgs);
+    server.use('/reference',[schemaValidation,validateSession,],reference);
 };
 
 export default ROUTES;
