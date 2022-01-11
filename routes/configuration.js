@@ -25,7 +25,7 @@ router.post('/addFramework', async (req,res) => {
     
 })
 
-router.post('/setupKeyMember', async (req,res) => {
+router.post('/addKeyMember', async (req,res) => {
   const  {email,org_id,project_id,role_id} = req.body;
     const  user_id = req.headers.user_id
     let sql = `CALL master.ups_setup_keymember('${email}',${org_id},${project_id},${role_id},${user_id})`;
