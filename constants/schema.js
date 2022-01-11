@@ -18,7 +18,7 @@ const SCHEMAS = {
             "type": "object",
             "properties": {
                 "project_id": {"type":"number","minLength":1},
-                "framework_ids": {"type":"object"}
+                "framework_ids": {"type":"array"}
             },
             "required": ["project_id","framework_ids"],
             // "message": "Custom message"
