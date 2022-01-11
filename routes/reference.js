@@ -26,10 +26,4 @@ router.get('/getRoles', async (req,res) => {
     res.send(resp);
 })
 
-router.post('/addFramework', async (req,res) => {
-    const { framework_name } = req.body;
-    let sql = `insert into reference.frameworks (name) values ('${framework_name}')`;
-    let resp = await insertSql(sql);
-    res.send(resp);
-})
 export default router;

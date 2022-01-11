@@ -44,6 +44,7 @@ export const validateSession = async (req, res, next) => {
                     res.status(500).send({ status_code: 'air500', message: 'Invalid token' });
                 } else {
                     let user_id = decoded.sub;
+                    req.headers.user_id = user_id;
                     let sql = `select user_id,token,id from master.user_session where user_id = ${user_id} and token = '${token}' and status = 'A' order by id desc limit 1`;
                     let resp = await selectSql(sql);
                     if (resp.results.length > 0) {

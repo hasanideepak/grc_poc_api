@@ -6,6 +6,7 @@ export const selectSql = async (sql) => {
             //console.log(sql);
             postgress.query(sql, function (error, results) {
                 if (error) {
+                    console.log(error);
                     resolve({ status_code: 'air404', message: 'Error in query' });
                 } else {
                     resolve({ status_code: 'air200', message: 'Success', results: results.rows });
@@ -42,7 +43,27 @@ export const insertSql = async (sql) => {
                 if (error) {
                     resolve({ status_code: 'air404', message: error.sqlMessage });
                 } else {
-                    resolve({ status_code: 'air200', message: 'Success', message_id: results.insertId });
+                    console.log(results)
+                    resolve({ status_code: 'air200', message: 'Success', message_id: results.rows[0] });
+                }
+            });
+        } catch (error) {
+            reject('')
+            console.error(`Error occured in addLocation ${error}`);
+        }
+    })
+}
+
+
+export const callProdecure = async () => {
+    return new Promise((resolve, reject) => {
+        try {
+            postgress.query(sql, function (error, results) {
+                if (error) {
+                    resolve({ status_code: 'air404', message: error.sqlMessage });
+                } else {
+                    console.log(results)
+                    resolve({ status_code: 'air200', message: 'Success', message_id: results.rows[0] });
                 }
             });
         } catch (error) {
