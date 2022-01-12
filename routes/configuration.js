@@ -30,9 +30,9 @@ router.post('/addProjectFrameworks', async (req, res) => {
 })
 
 router.post('/addKeyMember', async (req, res) => {
-  const { email, org_id, project_id } = req.body;
+  const { email, org_id, project_id, department_id } = req.body;
   const user_id = req.headers.user_id
-  let sql = `CALL master.usp_setup_keymember('${email}',${org_id},${project_id},${user_id})`;
+  let sql = `CALL master.usp_setup_keymember('${email}',${org_id},${project_id},${department_id},${user_id})`;
   let resp = await selectSql(sql);
   res.send(resp);
 
@@ -48,9 +48,9 @@ router.post('/addServicePartner', async (req, res) => {
 })
 
 router.post('/addTaskOwner', async (req, res) => {
-  const { email, first_name, last_name,org_id, project_id} = req.body;
+  const { email, first_name, last_name,org_id, project_id, department_id} = req.body;
   const user_id = req.headers.user_id
-  let sql = `CALL master.usp_add_task_owner('${email}','${first_name}','${last_name}',${org_id},${project_id},${user_id})`;
+  let sql = `CALL master.usp_add_task_owner('${email}','${first_name}','${last_name}',${org_id},${project_id},${department_id},${user_id})`;
   let resp = await selectSql(sql);
   res.send(resp);
 

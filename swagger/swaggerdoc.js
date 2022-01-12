@@ -160,10 +160,10 @@ const SwaggerModels = () => {
           }
         }
       },
-      '/reference/getDepartments': {
+      '/reference/getDepartments/:is_department': {
         get: {
           tags: [
-            'Reference',
+            'Departments',
           ],
           summary: 'Get All Departments',
           description: `
