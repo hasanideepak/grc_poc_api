@@ -37,20 +37,47 @@ const SCHEMAS = {
             // "message": "Custom message"
         }
     },
-    'setupKeyMember': {
+    'addKeyMember': {
         schema:
         {
             "type": "object",
             "properties": {
                 "email": {"type":"string","minLength":2},
-                "role_id": {"type":"number","minLength":2},
                 "project_id": {"type":"number","minLength":2},
                 "org_id":{"type":"number","minLength":1}
             },
-            "required": ["email","role_id","project_id","org_id"],
+            "required": ["email","project_id","org_id"],
             // "message": "Custom message"
         }
-    }
+    },
+    'addServicePartner': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "email": {"type":"string","minLength":2},
+                "project_id": {"type":"number","minLength":2},
+                "full_name":{"type":"string","minLength":3}
+            },
+            "required": ["email","project_id","full_name"],
+            // "message": "Custom message"
+        }
+    },
+    'addTaskOwner': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "email": {"type":"string","minLength":2},
+                "first_name": {"type":"string","minLength":2},
+                "last_name": {"type":"string","minLength":2},
+                "project_id": {"type":"number","minLength":2},
+                "org_id":{"type":"number","minLength":1}
+            },
+            "required": ["email","project_id","org_id","first_name","last_name"],
+            // "message": "Custom message"
+        }
+    },
 
    
 };

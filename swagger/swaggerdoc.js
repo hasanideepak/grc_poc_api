@@ -280,6 +280,368 @@ const SwaggerModels = () => {
           }
         }
       },
+      '/configuration/setupAccount': {
+        post: {
+          tags: [
+            'Setup Account',
+          ],
+          summary: 'Setup Account',
+          description: `
+            Description     : Setup Account
+            Sample Url      : ${baseURL}configuration/setupAccount`,
+          produces: [
+            'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide account name, project name and organaisation id.',
+              schema: {
+                type: 'object',
+                properties: {
+                  account_name: {
+                    type: 'string',
+                    example: 'Account A',
+                    required: true
+                  },
+                  project_name: {
+                    type: 'string',
+                    example: 'Project A',
+                    required: true
+                  },
+                  org_id: {
+                    type: 'number',
+                    example: '12',
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  },
+                  results: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        account_id: {
+                          type: 'number',
+                          description:'Account ID'
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/addProjectFrameworks': {
+        post: {
+          tags: [
+            'Project Frameworks'
+          ],
+          summary: 'Add Project Frameworks',
+          description: `
+            Description     : Add Project Frameworks
+            Sample Url      : ${baseURL}configuration/addProjectFrameworks`,
+          produces: [
+            'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide Project name and Framework ids.',
+              schema: {
+                type: 'object',
+                properties: {
+                 project_name: {
+                    type: 'string',
+                    example: 'Project A',
+                    required: true
+                  },
+                  framework_ids: {
+                    type: 'array',
+                    example: ["2","2"],
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/addKeyMember': {
+        post: {
+          tags: [
+            'Key member',
+          ],
+          summary: 'Add Keymember',
+          description: `
+            Description     : Add Keymember
+            Sample Url      : ${baseURL}configuration/addKeyMember`,
+          produces: [
+            'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide email, project id and organaisation id.',
+              schema: {
+                type: 'object',
+                properties: {
+                  email: {
+                    type: 'string',
+                    example: 'example@example.com',
+                    required: true
+                  },
+                  project_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  },
+                  org_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/addServicePartner': {
+        post: {
+          tags: [
+            'Service Partner'
+          ],
+          summary: 'Add Service Partner',
+          description: `
+            Description     : Add Service Partner
+            Sample Url      : ${baseURL}configuration/addServicePartner`,
+          produces: [
+            'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide email, full name and project id.',
+              schema: {
+                type: 'object',
+                properties: {
+                  email: {
+                    type: 'string',
+                    example: 'example@example.com',
+                    required: true
+                  },
+                  full_name: {
+                    type: 'string',
+                    example: 'John Doe',
+                    required: true
+                  },
+                  project_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/addTaskOwner': {
+        post: {
+          tags: [
+            'Task Owner',
+          ],
+          summary: 'Add Task Owner',
+          description: `
+            Description     : Add Task Owner
+            Sample Url      : ${baseURL}configuration/addTaskOwner`,
+          produces: [
+            'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide email, first name, last name, project id and organaisation id.',
+              schema: {
+                type: 'object',
+                properties: {
+                  email: {
+                    type: 'string',
+                    example: 'example@example.com',
+                    required: true
+                  },
+                  first_name: {
+                    type: 'string',
+                    example: 'John',
+                    required: true
+                  },
+                  last_name: {
+                    type: 'string',
+                    example: 'Doe',
+                    required: true
+                  },
+                  project_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  },
+                  org_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       // '/reference/getOrgTypes': {
       //   get: {
       //     tags: [
