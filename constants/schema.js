@@ -43,7 +43,7 @@ const SCHEMAS = {
             "type": "object",
             "properties": {
                 "email": {"type":"string","minLength":2},
-                "project_id": {"type":"number","minLength":2},
+                "project_id": {"type":"number","minLength":1},
                 "org_id":{"type":"number","minLength":1}
             },
             "required": ["email","project_id","org_id"],
@@ -56,7 +56,7 @@ const SCHEMAS = {
             "type": "object",
             "properties": {
                 "email": {"type":"string","minLength":2},
-                "project_id": {"type":"number","minLength":2},
+                "project_id": {"type":"number","minLength":1},
                 "full_name":{"type":"string","minLength":3}
             },
             "required": ["email","project_id","full_name"],
@@ -71,10 +71,22 @@ const SCHEMAS = {
                 "email": {"type":"string","minLength":2},
                 "first_name": {"type":"string","minLength":2},
                 "last_name": {"type":"string","minLength":2},
-                "project_id": {"type":"number","minLength":2},
+                "project_id": {"type":"number","minLength":1},
                 "org_id":{"type":"number","minLength":1}
             },
             "required": ["email","project_id","org_id","first_name","last_name"],
+            // "message": "Custom message"
+        }
+    },
+    'addThirdPartyConnector': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "project_id": {"type":"number","minLength":1},
+                "connector_id": {"type":"number","minLength":1}
+            },
+            "required": ["connector_id","project_id"],
             // "message": "Custom message"
         }
     },

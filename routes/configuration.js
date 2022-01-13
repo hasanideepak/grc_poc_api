@@ -39,7 +39,7 @@ router.post('/addKeyMember', async (req, res) => {
 })
 
 router.post('/addServicePartner', async (req, res) => {
-  const { email, full_name, project_id} = req.body;
+  const { email, full_name, project_id } = req.body;
   const user_id = req.headers.user_id
   let sql = `CALL master.usp_add_service_partner('${email}','${full_name}',${project_id},${user_id})`;
   let resp = await selectSql(sql);
@@ -48,11 +48,25 @@ router.post('/addServicePartner', async (req, res) => {
 })
 
 router.post('/addTaskOwner', async (req, res) => {
-  const { email, first_name, last_name,org_id, project_id, department_id} = req.body;
+  const { email, first_name, last_name, org_id, project_id, department_id } = req.body;
   const user_id = req.headers.user_id
   let sql = `CALL master.usp_add_task_owner('${email}','${first_name}','${last_name}',${org_id},${project_id},${department_id},${user_id})`;
   let resp = await selectSql(sql);
   res.send(resp);
+
+})
+
+router.post('/addThirdPartyConnector', async (req, res) => {
+  const { project_id, connector_id } = req.body;
+  const configType = 'third_party_connector';
+  const status = 'A';
+  const user_id = req.headers.user_id;
+
+  let sql = `insert into master.project_config (project_id,config_type,config_value,status,created_on,created_by)
+      values (${project_id},'${configType}','${connector_id}','${status}',NOW(),${user_id})`;
+  let resp = await insertSql(sql);
+  res.send(resp);
+
 
 })
 

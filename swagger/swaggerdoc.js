@@ -642,6 +642,130 @@ const SwaggerModels = () => {
           }
         }
       },
+      '/reference/getThirdPartyConnectors': {
+        get: {
+          tags: [
+            'Get Third Party Connectors',
+          ],
+          summary: 'Get Third Party Connectors',
+          description: `
+            Description     : Get All Frameworks
+            Sample Url      : ${baseURL}reference/getThirdPartyConnectors`,
+          produces: [
+            'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  },
+                  results: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        id: {
+                          type: 'number',
+                          description:'Connector ID'
+                        },
+                        name: {
+                          type: 'string',
+                          description:'Connector Name'
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/addThirdPartyConnector': {
+        post: {
+          tags: [
+            'Add Third Party Connectors',
+          ],
+          summary: 'Add Third Party Connectors',
+          description: `
+            Description     : Add Third Party Connectors
+            Sample Url      : ${baseURL}configuration/addThirdPartyConnector`,
+          produces: [
+            'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide email, first name, last name, project id and organaisation id.',
+              schema: {
+                type: 'object',
+                properties: {
+                project_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  },
+                  connector_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       // '/reference/getOrgTypes': {
       //   get: {
       //     tags: [

@@ -27,4 +27,10 @@ router.get('/getRoles', async (req,res) => {
     res.send(resp);
 })
 
+router.get('/getThirdPartyConnectors', async (req,res) => {
+    let sql = `select id,value from reference.third_party_connectors where status ='A'`;
+    let resp = await selectSql(sql);
+    res.send(resp);
+})
+
 export default router;
