@@ -20,15 +20,14 @@ router.post('/addProjectFrameworks', async (req, res) => {
   const configType = 'framework';
   const status = 'A';
   const user_id = req.headers.user_id;
-  let frameworkIds = JSON.stringify(framework_ids);
+  let frameworkIds = JSON.stringify(framework_ids),resp = '';
 
   framework_ids.forEach(async (item) => {
     let sql = `insert into master.project_config (project_id,config_type,config_value,status,created_on,created_by)
       values (${project_id},'${configType}','${item}','${status}',NOW(),${user_id})`;
-    let resp = await insertSql(sql);
-    res.send(resp);
+    resp = await insertSql(sql);
   });
-
+  res.send({ status_code: 'air200', message: 'Success'});
 
 })
 

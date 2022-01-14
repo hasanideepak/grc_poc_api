@@ -12,7 +12,7 @@ const SCHEMAS = {
             // "message": "Custom message"
         }
     },
-    'addFramework': {
+    'addProjectFrameworks': {
         schema:
         {
             "type": "object",

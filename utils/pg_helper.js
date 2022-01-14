@@ -43,7 +43,7 @@ export const insertSql = async (sql) => {
                 if (error) {
                     resolve({ status_code: 'air404', message: error.sqlMessage });
                 } else {
-                    console.log(results)
+                    // console.log(results)
                     resolve({ status_code: 'air200', message: 'Success', message_id: results.rows[0] });
                 }
             });
