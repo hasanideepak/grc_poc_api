@@ -160,10 +160,10 @@ const SwaggerModels = () => {
           }
         }
       },
-      '/reference/getDepartments/:is_department': {
+      '/reference/getDepartments/:is_management': {
         get: {
           tags: [
-            'Departments',
+            'Reference',
           ],
           summary: 'Get All Departments',
           description: `
@@ -283,11 +283,11 @@ const SwaggerModels = () => {
       '/configuration/setupAccount': {
         post: {
           tags: [
-            'Setup Account',
+            'Configuration',
           ],
           summary: 'Setup Account',
           description: `
-            Description     : Setup Account
+            Description     : Setup Account and Project
             Sample Url      : ${baseURL}configuration/setupAccount`,
           produces: [
             'application/json'
@@ -364,7 +364,7 @@ const SwaggerModels = () => {
       '/configuration/addProjectFrameworks': {
         post: {
           tags: [
-            'Project Frameworks'
+            'Configuration'
           ],
           summary: 'Add Project Frameworks',
           description: `
@@ -428,7 +428,7 @@ const SwaggerModels = () => {
       '/configuration/addKeyMember': {
         post: {
           tags: [
-            'Key member',
+            'Configuration',
           ],
           summary: 'Add Keymember',
           description: `
@@ -497,7 +497,7 @@ const SwaggerModels = () => {
       '/configuration/addServicePartner': {
         post: {
           tags: [
-            'Service Partner'
+            'Configuration'
           ],
           summary: 'Add Service Partner',
           description: `
@@ -566,7 +566,7 @@ const SwaggerModels = () => {
       '/configuration/addTaskOwner': {
         post: {
           tags: [
-            'Task Owner',
+            'Configuration',
           ],
           summary: 'Add Task Owner',
           description: `
@@ -645,7 +645,7 @@ const SwaggerModels = () => {
       '/reference/getThirdPartyConnectors': {
         get: {
           tags: [
-            'Get Third Party Connectors',
+            'Reference',
           ],
           summary: 'Get Third Party Connectors',
           description: `
@@ -705,7 +705,7 @@ const SwaggerModels = () => {
       '/configuration/addThirdPartyConnector': {
         post: {
           tags: [
-            'Add Third Party Connectors',
+            'Configuration',
           ],
           summary: 'Add Third Party Connectors',
           description: `
