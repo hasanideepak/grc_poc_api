@@ -8,9 +8,12 @@ router.post('/setupAccount', async (req, res) => {
   const user_id = req.headers.user_id
   let sql = `CALL master.usp_setup_account('${account_name}','${project_name}',${org_id},${user_id})`;
   let resp = await selectSql(sql);
+  sql = `select project_id from master.projects where account_id = (select account_id from master.accounts where org_id = ${org_id} order by account_id desc limit 1) order by project_id desc limit 1`
+  let resp1 = await selectSql(sql);
+  resp.project_id = resp1.results[0].project_id;
+  delete resp.results;
   res.send(resp);
-
-})
+});
 
 router.post('/addProjectFrameworks', async (req, res) => {
   const { project_id, framework_ids } = req.body;
