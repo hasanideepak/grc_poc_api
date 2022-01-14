@@ -387,18 +387,18 @@ const SwaggerModels = () => {
             {
               in: 'body',
               name: 'Request Body',
-              description: 'Provide Project name and Framework ids.',
+              description: 'Provide Project id and Framework ids.',
               schema: {
                 type: 'object',
                 properties: {
-                 project_name: {
-                    type: 'string',
-                    example: 'Project A',
+                 project_id: {
+                    type: 'number',
+                    example: 1,
                     required: true
                   },
                   framework_ids: {
                     type: 'array',
-                    example: ["2","2"],
+                    example: [1,2,3],
                     required: true
                   }
                 }
