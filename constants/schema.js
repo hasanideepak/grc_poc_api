@@ -72,9 +72,10 @@ const SCHEMAS = {
                 "first_name": {"type":"string","minLength":2},
                 "last_name": {"type":"string","minLength":2},
                 "project_id": {"type":"number","minLength":1},
-                "org_id":{"type":"number","minLength":1}
+                "org_id":{"type":"number","minLength":1},
+                "department_id":{"type":"number","minLength":1},
             },
-            "required": ["email","project_id","org_id","first_name","last_name"],
+            "required": ["email","project_id","org_id","first_name","last_name","department_id"],
             // "message": "Custom message"
         }
     },
@@ -87,6 +88,42 @@ const SCHEMAS = {
                 "connector_id": {"type":"number","minLength":1}
             },
             "required": ["connector_id","project_id"],
+            // "message": "Custom message"
+        }
+    },
+    'deleteKeyMember': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "org_id": {"type":"number","minLength":1},
+                "emp_id": {"type":"number","minLength":1}
+            },
+            "required": ["org_id","emp_id"],
+            // "message": "Custom message"
+        }
+    },
+    'deleteTaskOwner': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "org_id": {"type":"number","minLength":1},
+                "emp_id": {"type":"number","minLength":1}
+            },
+            "required": ["org_id","emp_id"],
+            // "message": "Custom message"
+        }
+    },
+    'deleteServicePartner': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "org_id": {"type":"number","minLength":1},
+                "emp_id": {"type":"number","minLength":1}
+            },
+            "required": ["org_id","emp_id"],
             // "message": "Custom message"
         }
     },

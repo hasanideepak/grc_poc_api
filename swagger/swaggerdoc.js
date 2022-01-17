@@ -766,6 +766,198 @@ const SwaggerModels = () => {
           }
         }
       },
+      '/configuration/deleteKeyMember': {
+        post: {
+          tags: [
+            'Configuration',
+          ],
+          summary: 'Delete Keymember',
+          description: `
+            Description     : Delete Keymember
+            Sample Url      : ${baseURL}configuration/deleteKeyMember`,
+          produces: [
+            'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide Organization ID and Employee ID',
+              schema: {
+                type: 'object',
+                properties: {
+                org_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  },
+                  emp_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/deleteTaskOwner': {
+        post: {
+          tags: [
+            'Configuration',
+          ],
+          summary: 'Delete Task Owner',
+          description: `
+            Description     : Delete Task Owner
+            Sample Url      : ${baseURL}configuration/deleteTaskOwner`,
+          produces: [
+            'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide Organization ID and Employee ID',
+              schema: {
+                type: 'object',
+                properties: {
+                org_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  },
+                  emp_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/deleteServicePartner': {
+        post: {
+          tags: [
+            'Configuration',
+          ],
+          summary: 'Delete Service Partner',
+          description: `
+            Description     : Delete Service Partner
+            Sample Url      : ${baseURL}configuration/deleteServicePartner`,
+          produces: [
+            'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide Organization ID and Employee ID',
+              schema: {
+                type: 'object',
+                properties: {
+                org_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  },
+                  emp_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       // '/reference/getOrgTypes': {
       //   get: {
       //     tags: [

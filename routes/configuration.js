@@ -72,6 +72,27 @@ router.post('/addThirdPartyConnector', async (req, res) => {
 
 })
 
+router.post('/deleteKeyMember', async (req, res) => {
+  const { org_id, emp_id } = req.body;
+  let sql = `CALL master.usp_delete_keymember(${org_id},${emp_id})`;
+  let resp = await selectSql(sql);
+  res.send(resp);
+})
+
+router.post('/deleteTaskOwner', async (req, res) => {
+  const { org_id, emp_id } = req.body;
+  let sql = `CALL master.usp_delete_task_owner(${org_id},${emp_id})`;
+  let resp = await selectSql(sql);
+  res.send(resp);
+})
+
+router.post('/deleteServicePartner', async (req, res) => {
+  const { org_id, emp_id } = req.body;
+  let sql = `CALL master.usp_delete_service_partner(${org_id},${emp_id})`;
+  let resp = await selectSql(sql);
+  res.send(resp);
+})
+
 
 
 export default router;
