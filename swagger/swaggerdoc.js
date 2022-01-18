@@ -1032,13 +1032,29 @@ const SwaggerModels = () => {
                     items: {
                       type: 'object',
                       properties: {
-                        id: {
-                          type: 'number',
-                          description:'Role ID'
+                        accounts_and_projects: {
+                          type: 'object',
+                          description:'Account and Project Data'
                         },
-                        name: {
-                          type: 'string',
-                          description:'Role Name'
+                        keymembers: {
+                          type: 'object',
+                          description:'Keymembers Data'
+                        },
+                        task_owners: {
+                          type: 'object',
+                          description:'Task Owners Data'
+                        },
+                        frameworks: {
+                          type: 'object',
+                          description:'Frameworks Data'
+                        },
+                        service_partners: {
+                          type: 'object',
+                          description:'Service Partners Data'
+                        },
+                        third_part_connectors: {
+                          type: 'object',
+                          description:'Third Party Connectors'
                         }
                       }
                     }
