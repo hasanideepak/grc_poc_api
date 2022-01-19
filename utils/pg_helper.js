@@ -1,4 +1,5 @@
 import postgress from '../init/pgclient.js';
+import error_resp from '../constants/errors.js'
 
 export const selectSql = async (sql) => {
     return new Promise((resolve, reject) => {
@@ -7,7 +8,7 @@ export const selectSql = async (sql) => {
             postgress.query(sql, function (error, results) {
                 if (error) {
                     console.log(error);
-                    resolve({ status_code: 'air404', message: 'Error in query' });
+                    resolve(error_resp.Query_Error.error_msg.toString().replace('<error_msg>', error.detail));
                 } else {
                     resolve({ status_code: 'air200', message: 'Success', results: results.rows });
                 }
@@ -24,7 +25,7 @@ export const updateSql = async (sql) => {
         try {
             postgress.query(sql, function (error, results) {
                 if (error) {
-                    resolve({ status_code: 'air404', message: error.sqlMessage });
+                    resolve(error_resp.Query_Error.error_msg.toString().replace('<error_msg>', error.detail));
                 } else {
                     resolve({ status_code: 'air200', message: 'Success', rows_affected: results.affectedRows });
                 }
@@ -41,7 +42,7 @@ export const insertSql = async (sql) => {
         try {
             postgress.query(sql, function (error, results) {
                 if (error) {
-                    resolve({ status_code: 'air404', message: error.sqlMessage });
+                    resolve(error_resp.Query_Error.error_msg.toString().replace('<error_msg>', error.detail));
                 } else {
                     // console.log(results)
                     resolve({ status_code: 'air200', message: 'Success', message_id: results.rows[0] });
@@ -60,7 +61,7 @@ export const callProdecure = async () => {
         try {
             postgress.query(sql, function (error, results) {
                 if (error) {
-                    resolve({ status_code: 'air404', message: error.sqlMessage });
+                    resolve(error_resp.Query_Error.error_msg.toString().replace('<error_msg>', error.detail));
                 } else {
                     console.log(results)
                     resolve({ status_code: 'air200', message: 'Success', message_id: results.rows[0] });
