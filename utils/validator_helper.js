@@ -1,6 +1,7 @@
 import schema from '../constants/schema.js';
 import Validator from 'jsonschema';
 const validatorObj = new Validator.Validator();
+import error_resp from '../constants/errors.js'
 
 export const schemaValidator = async (req) => {
     return new Promise((resolve, reject) => {
@@ -24,7 +25,7 @@ export const schemaValidator = async (req) => {
                     resolve({ status_code: 'air401', message: error['path'] + ' ' + error.message });
                 }
         }else{
-            resolve({ status_code: 'air401',message:'Error occured in schema validation'});
+            resolve(error_resp.Schema_Error.error_msg);
         }
 
         } catch (error) {

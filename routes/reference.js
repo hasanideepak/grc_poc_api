@@ -28,7 +28,7 @@ router.get('/getRoles', async (req,res) => {
 })
 
 router.get('/getThirdPartyConnectors', async (req,res) => {
-    let sql = `select id,value from reference.third_party_connectors where status ='A'`;
+    let sql = `select id,name as value from reference.third_party_connectors where status ='A'`;
     let resp = await selectSql(sql);
     res.send(resp);
 })

@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { selectSql } from './pg_helper.js';
 import { schemaValidator } from './validator_helper.js';
+import error_resp from '../constants/errors.js'
 
 const PUBLIC_API = '';//process.env.PUBLIC_API;
 
@@ -14,52 +15,50 @@ export const validateSession = async (req, res, next) => {
     if (PUBLIC_API.includes(api_path)) {
         next();
     } else {
-        let token = headers.authorization, api_key = headers.apikey;
-        if (api_key != undefined) {
-
-            let sql = `select issue_to,api_key as apikey,api_services from api_key where api_key = '${api_key}'`;
-            let resp = await selectSql(sql);
-            if (resp.results.length > 0) {
-                let apikey = resp.results[0].apikey;
-                let api_service = resp.results[0].api_services
-                if (api_key == apikey) {
-                    if (api_service.includes(`,${api_path},`)) {
-                        next();
-                    } else {
-                        res.status(500).send({ status_code: 'air500', message: 'You are not authorized to use this service' });
-                    }
-                } else {
-                    res.status(500).send({ status_code: 'air500', message: 'Invalid APIKEY' });
-                }
+        let token = headers.authorization;
+        if (token != undefined) {
+            token = token.replace('Bearer ', '');
+            // let decoded = jwt.decode(token, '926D96C90030DD58429D2751AC1BDBBC');
+            let decoded = jwt.decode(token);
+            // console.log('decoded', decoded);
+            if (decoded == null) {
+                res.status(error_resp.Invalid_Token.status_code).send(error_resp.Invalid_Token.error_msg);
             } else {
-                res.status(500).send({ status_code: 'air500', message: 'Invalid APIKEY' });
+                let user_id = decoded.sub;
+                req.headers.user_id = user_id;
+                let sql = `select user_id,token,id from ${req.headers.schema_nm}.user_session where user_id = ${user_id} and token = '${token}' and status = 'A' order by id desc limit 1`;
+                let resp = await selectSql(sql);
+                if (resp.results.length > 0) {
+                    next();
+                } else {
+                    res.status(error_resp.Invalid_Token.status_code).send(error_resp.Invalid_Token.error_msg);
+                }
             }
         } else {
-            if (token != undefined) {
-                token = token.replace('Bearer ', '');
-                // let decoded = jwt.decode(token, '926D96C90030DD58429D2751AC1BDBBC');
-                let decoded = jwt.decode(token);
-                // console.log('decoded', decoded);
-                if (decoded == null) {
-                    res.status(500).send({ status_code: 'air500', message: 'Invalid token' });
-                } else {
-                    let user_id = decoded.sub;
-                    req.headers.user_id = user_id;
-                    let sql = `select user_id,token,id from master.user_session where user_id = ${user_id} and token = '${token}' and status = 'A' order by id desc limit 1`;
-                    let resp = await selectSql(sql);
-                    if (resp.results.length > 0) {
-                     next();
-                    } else {
-                        res.status(500).send({ status_code: 'air500', message: 'Invalid token' });
-                    }
-                }
-            } else {
-                res.status(500).send({ status_code: 'air500', message: 'Invalid token' });
-            }
+            res.status(error_resp.Invalid_Token.status_code).send(error_resp.Invalid_Token.error_msg);
         }
+
     }
 }
+export const saasValidation = async (req, res, next) => {
+    const api_key = req.headers.apikey
+    let schema_nm = '';
+    //check api key for SaaS implementation
+    if (api_key != undefined) {
 
+        let sql = `select client_code,client_name,schema from saasmaster.client where api_key = '${api_key}' and status = 'A'`;
+        let resp = await selectSql(sql);
+        if (resp.results.length > 0) {
+            schema_nm = resp.results[0].schema;
+            req.headers.schema_nm = schema_nm;
+            next()
+        } else {
+            res.status(error_resp.Invalid_APIKEY.status_code).send(error_resp.Invalid_APIKEY.error_msg);
+        }
+    } else {
+        res.status(error_resp.Invalid_APIKEY.status_code).send(error_resp.Invalid_APIKEY.error_msg);
+    }
+}
 export const schemaValidation = async (req, res, next) => {
 
     if (req.method == 'POST') {
