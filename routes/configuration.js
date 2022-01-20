@@ -156,7 +156,7 @@ router.get('/getConfiguration/:org_id/:account_id?/:project_id?', async (req, re
   where b.project_id = ${pro_id} and b.config_type = 'service_partner' and a.org_id = c.org_id and cast(b.config_value as integer) = c.org_id`
   resp_servicePartner = await selectSql(servicePartner_sql);
 
-  let thirdPartyConnector_sql = `SELECT a.id,a.name,case coalesce(b.config_value,'') when '' then 'N' else 'Y' end as is_selected from ${schema_nm}.project_config b right join reference.third_party_connectors a on cast(b.config_value as integer) = a.id and b.project_id = ${pro_id} and b.config_type = 'third_party_connector' and b.status = 'A'`
+  let thirdPartyConnector_sql = `SELECT a.id,a.name,case coalesce(b.config_value,'') when '' then 'N' else 'Y' end as is_selected,case coalesce(b.additional_info,'') when '' then 'N' else 'Y' end as is_token_added,coalesce(right(b.additional_info,3),'') as token from ${schema_nm}.project_config b right join reference.third_party_connectors a on cast(b.config_value as integer) = a.id and b.project_id = ${pro_id} and b.config_type = 'third_party_connector' and b.status = 'A'`
   resp_thirdPartyConnector = await selectSql(thirdPartyConnector_sql);
 
   res.send({ status_code : 'air200',message:'Success', 
@@ -182,7 +182,7 @@ router.post('/addThirdPartyConnectorToken', async (req, res) => {
 router.get('/getThirdPartyConnectors/:project_id', async (req,res) => {
   const {project_id} = req.params;
   const schema_nm = req.headers.schema_nm;
-  let sql = `select a.config_value as connector_id,b.name from master_1.project_config a,reference.third_party_connectors b where a.project_id = ${project_id} and a.config_type = 'third_party_connector' and a.status = 'A' and cast(a.config_value as integer) = b.id`;
+  let sql = `select a.config_value as connector_id,b.name from ${schema_nm}.project_config a,reference.third_party_connectors b where a.project_id = ${project_id} and a.config_type = 'third_party_connector' and a.status = 'A' and cast(a.config_value as integer) = b.id`;
   let resp = await selectSql(sql);
   res.send(resp);
 })
