@@ -86,9 +86,9 @@ const SCHEMAS = {
             "type": "object",
             "properties": {
                 "project_id": {"type":"number","minLength":1},
-                "connector_id": {"type":"number","minLength":1}
+                "connector_ids": {"type":"array"}
             },
-            "required": ["connector_id","project_id"],
+            "required": ["connector_ids","project_id"],
             // "message": "Custom message"
         }
     },

@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.post('/setupAccount', async (req, res) => {
   const { account_name, project_name, org_id } = req.body;
-  const user_id = req.headers.user_id,schema_nm = req.headers.schema_nm;
+  const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
   let sql = `CALL ${schema_nm}.usp_setup_account('${account_name}','${project_name}',${org_id},${user_id},'${schema_nm}')`;
   let resp = await selectSql(sql);
   sql = `select project_id from ${schema_nm}.projects where account_id = (select account_id from ${schema_nm}.accounts where org_id = ${org_id} order by account_id desc limit 1) order by project_id desc limit 1`
@@ -19,14 +19,14 @@ router.post('/addProjectFrameworks', async (req, res) => {
   const configType = 'framework';
   const status = 'A';
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
-  
+
   let frameworkIds = JSON.stringify(framework_ids), resp = '';
   let updateQuery = `update ${schema_nm}.project_config set status = 'D' where project_id = ${project_id} and config_type = '${configType}'`
   let respUpdate = await updateSql(updateQuery)
-  
+
   framework_ids.forEach(async (item) => {
     let sql = `insert into ${schema_nm}.project_config (project_id,config_type,config_value,status,created_on,created_by)
-      values (${project_id},'${configType}','${item}','${status}',NOW(),${user_id}) on duplicate key status = '${status}' 
+      values (${project_id},'${configType}','${item}','${status}',NOW(),${user_id}) 
       on conflict (project_id,config_type,config_value) do update set status ='${status}',last_upd_on = NOW(),last_upd_by = ${user_id}`;
     resp = await insertSql(sql);
   });
@@ -84,10 +84,10 @@ router.post('/addThirdPartyConnector', async (req, res) => {
   let resp = '';
   let updateQuery = `update ${schema_nm}.project_config set status = 'D' where project_id = ${project_id} and config_type = '${configType}'`
   let respUpdate = await updateSql(updateQuery)
-  
+
   connector_ids.forEach(async (item) => {
     let sql = `insert into ${schema_nm}.project_config (project_id,config_type,config_value,status,created_on,created_by)
-      values (${project_id},'${configType}','${item}','${status}',NOW(),${user_id}) on duplicate key status = '${status}' 
+      values (${project_id},'${configType}','${item}','${status}',NOW(),${user_id}) 
       on conflict (project_id,config_type,config_value) do update set status ='${status}',last_upd_on = NOW(),last_upd_by = ${user_id}`;
     resp = await insertSql(sql);
   });
@@ -159,7 +159,8 @@ router.get('/getConfiguration/:org_id/:account_id?/:project_id?', async (req, re
   let thirdPartyConnector_sql = `SELECT a.id,a.name,case coalesce(b.config_value,'') when '' then 'N' else 'Y' end as is_selected,case coalesce(b.additional_info,'') when '' then 'N' else 'Y' end as is_token_added,coalesce(right(b.additional_info,3),'') as token from ${schema_nm}.project_config b right join reference.third_party_connectors a on cast(b.config_value as integer) = a.id and b.project_id = ${pro_id} and b.config_type = 'third_party_connector' and b.status = 'A'`
   resp_thirdPartyConnector = await selectSql(thirdPartyConnector_sql);
 
-  res.send({ status_code : 'air200',message:'Success', 
+  res.send({
+    status_code: 'air200', message: 'Success',
     accounts_and_projects: resp_project_account.results,
     keymembers: resp_keymemebers.results,
     task_owners: resp_taskowner.results,
@@ -179,8 +180,8 @@ router.post('/addThirdPartyConnectorToken', async (req, res) => {
   res.send(resp);
 });
 
-router.get('/getThirdPartyConnectors/:project_id', async (req,res) => {
-  const {project_id} = req.params;
+router.get('/getThirdPartyConnectors/:project_id', async (req, res) => {
+  const { project_id } = req.params;
   const schema_nm = req.headers.schema_nm;
   let sql = `select a.config_value as connector_id,b.name from ${schema_nm}.project_config a,reference.third_party_connectors b where a.project_id = ${project_id} and a.config_type = 'third_party_connector' and a.status = 'A' and cast(a.config_value as integer) = b.id`;
   let resp = await selectSql(sql);
