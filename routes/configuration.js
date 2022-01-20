@@ -1,6 +1,7 @@
 import express from 'express';
-import { selectSql, insertSql, updateSql } from '../utils/pg_helper.js';
+import { selectSql, insertSql, updateSql,RecordExist } from '../utils/pg_helper.js';
 const router = express.Router();
+import error_resp from '../constants/errors.js'
 
 router.post('/setupAccount', async (req, res) => {
   const { account_name, project_name, org_id } = req.body;
@@ -131,6 +132,11 @@ router.get('/getConfiguration/:org_id/:account_id?/:project_id?', async (req, re
   let resp_servicePartner = ''
   let resp_thirdPartyConnector = ''
   let pro_id = ''
+
+  let org_exist = await RecordExist('org_id',org_id,'orgs',schema_nm);
+  if(!org_exist){
+    res.status(error_resp.Invalid_Org_ID.status_code).send(error_resp.Invalid_Org_ID.error_msg);
+  }
 
   if (typeof project_id == 'undefined') {
     let sql = `select a.name as account_name,b.name as project_name,b.project_id from ${schema_nm}.accounts a,${schema_nm}.projects b where a.org_id = ${org_id} and a.account_id = b.account_id order by b.project_id desc limit 1`;

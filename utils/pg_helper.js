@@ -73,3 +73,25 @@ export const callProdecure = async () => {
         }
     })
 }
+
+export const RecordExist = async (fieldName, fieldValue,tableName,schema_nm) => {
+    return new Promise((resolve, reject) => {
+        try {
+            postgress.query(`select * from ${schema_nm}.${tableName} where ${fieldName} = ${fieldValue}`, function (error, results) {
+                if (error) {
+                    resolve(error_resp.Query_Error.error_msg.toString().replace('<error_msg>', error.detail));
+                } else {
+                    if(results.rows.length > 0){
+                        resolve(results.rows)
+                    }else{
+                        resolve(false);
+                    }
+                    
+                }
+            });
+        } catch (error) {
+            reject('')
+            console.error(`Error occured ${error}`);
+        }
+    })
+}
