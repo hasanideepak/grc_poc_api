@@ -80,7 +80,7 @@ router.post('/addThirdPartyConnector', async (req, res) => {
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
 
 
-  connector_ids = JSON.stringify(connector_ids)
+  let connectorIds = JSON.stringify(connector_ids)
   let resp = '';
   let updateQuery = `update ${schema_nm}.project_config set status = 'D' where project_id = ${project_id} and config_type = '${configType}'`
   let respUpdate = await updateSql(updateQuery)
