@@ -1,6 +1,5 @@
 import express from 'express';
-import { selectSql, insertSql } from '../utils/pg_helper.js';
-
+import { selectSql, insertSql, updateSql } from '../utils/pg_helper.js';
 const router = express.Router();
 
 router.post('/setupAccount', async (req, res) => {
@@ -20,11 +19,15 @@ router.post('/addProjectFrameworks', async (req, res) => {
   const configType = 'framework';
   const status = 'A';
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
+  
   let frameworkIds = JSON.stringify(framework_ids), resp = '';
-
+  let updateQuery = `update ${schema_nm}.project_config set status = 'D' where project_id = ${project_id} and config_type = '${configType}'`
+  let respUpdate = await updateSql(updateQuery)
+  
   framework_ids.forEach(async (item) => {
     let sql = `insert into ${schema_nm}.project_config (project_id,config_type,config_value,status,created_on,created_by)
-      values (${project_id},'${configType}','${item}','${status}',NOW(),${user_id})`;
+      values (${project_id},'${configType}','${item}','${status}',NOW(),${user_id}) on duplicate key status = '${status}' 
+      on conflict (project_id,config_type,config_value) do update set status ='${status}',last_upd_on = NOW(),last_upd_by = ${user_id}`;
     resp = await insertSql(sql);
   });
   res.send({ status_code: 'air200', message: 'Success' });
@@ -36,6 +39,10 @@ router.post('/addKeyMember', async (req, res) => {
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
   let sql = `CALL ${schema_nm}.usp_setup_keymember('${email}',${org_id},${project_id},${department_id},${user_id},'${schema_nm}')`;
   let resp = await selectSql(sql);
+  sql = `select emp_id from ${schema_nm}.org_employees where email = '${email}'`
+  let resp1 = await selectSql(sql);
+  resp.emp_id = resp1.results[0].emp_id;
+  delete resp.results;
   res.send(resp);
 
 })
@@ -45,6 +52,10 @@ router.post('/addServicePartner', async (req, res) => {
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
   let sql = `CALL ${schema_nm}.usp_add_service_partner('${email}','${full_name}',${project_id},${user_id},'${schema_nm}')`;
   let resp = await selectSql(sql);
+  sql = `select emp_id from ${schema_nm}.org_employees where email = '${email}'`
+  let resp1 = await selectSql(sql);
+  resp.emp_id = resp1.results[0].emp_id;
+  delete resp.results;
   res.send(resp);
 
 })
@@ -54,28 +65,40 @@ router.post('/addTaskOwner', async (req, res) => {
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
   let sql = `CALL ${schema_nm}.usp_add_task_owner('${email}','${first_name}','${last_name}',${org_id},${project_id},${department_id},${user_id},'${schema_nm}')`;
   let resp = await selectSql(sql);
+  sql = `select emp_id from ${schema_nm}.org_employees where email = '${email}'`
+  let resp1 = await selectSql(sql);
+  resp.emp_id = resp1.results[0].emp_id;
+  delete resp.results;
   res.send(resp);
 
 })
 
 router.post('/addThirdPartyConnector', async (req, res) => {
-  const { project_id, connector_id } = req.body;
+  const { project_id, connector_ids } = req.body;
   const configType = 'third_party_connector';
   const status = 'A';
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
 
-  let sql = `insert into ${schema_nm}.project_config (project_id,config_type,config_value,status,created_on,created_by)
-      values (${project_id},'${configType}','${connector_id}','${status}',NOW(),${user_id})`;
-  let resp = await insertSql(sql);
-  res.send(resp);
 
+  connector_ids = JSON.stringify(connector_ids)
+  let resp = '';
+  let updateQuery = `update ${schema_nm}.project_config set status = 'D' where project_id = ${project_id} and config_type = '${configType}'`
+  let respUpdate = await updateSql(updateQuery)
+  
+  connector_ids.forEach(async (item) => {
+    let sql = `insert into ${schema_nm}.project_config (project_id,config_type,config_value,status,created_on,created_by)
+      values (${project_id},'${configType}','${item}','${status}',NOW(),${user_id}) on duplicate key status = '${status}' 
+      on conflict (project_id,config_type,config_value) do update set status ='${status}',last_upd_on = NOW(),last_upd_by = ${user_id}`;
+    resp = await insertSql(sql);
+  });
+  res.send({ status_code: 'air200', message: 'Success' });
 
 })
 
 router.post('/deleteKeyMember', async (req, res) => {
-  const { org_id, emp_id } = req.body;
+  const { org_id, emp_id, project_id } = req.body;
   const schema_nm = req.headers.schema_nm;
-  let sql = `CALL ${schema_nm}.usp_delete_keymember(${org_id},${emp_id},'${schema_nm}')`;
+  let sql = `CALL ${schema_nm}.usp_delete_keymember(${org_id},${emp_id},${project_id},'${schema_nm}')`;
   let resp = await selectSql(sql);
   res.send(resp);
 })
@@ -89,9 +112,9 @@ router.post('/deleteTaskOwner', async (req, res) => {
 })
 
 router.post('/deleteServicePartner', async (req, res) => {
-  const { org_id, emp_id } = req.body;
+  const { org_id, emp_id, project_id } = req.body;
   const schema_nm = req.headers.schema_nm;
-  let sql = `CALL ${schema_nm}.usp_delete_service_partner(${org_id},${emp_id},'${schema_nm}')`;
+  let sql = `CALL ${schema_nm}.usp_delete_service_partner(${org_id},${emp_id},${project_id},'${schema_nm}')`;
   let resp = await selectSql(sql);
   res.send(resp);
 })
@@ -108,7 +131,6 @@ router.get('/getConfiguration/:org_id/:account_id?/:project_id?', async (req, re
   let resp_servicePartner = ''
   let resp_thirdPartyConnector = ''
   let pro_id = ''
-
 
   if (typeof project_id == 'undefined') {
     let sql = `select a.name as account_name,b.name as project_name,b.project_id from ${schema_nm}.accounts a,${schema_nm}.projects b where a.org_id = ${org_id} and a.account_id = b.account_id order by b.project_id desc limit 1`;

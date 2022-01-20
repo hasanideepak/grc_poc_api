@@ -44,7 +44,8 @@ const SCHEMAS = {
             "properties": {
                 "email": {"type":"string","minLength":2},
                 "project_id": {"type":"number","minLength":1},
-                "org_id":{"type":"number","minLength":1}
+                "org_id":{"type":"number","minLength":1},
+                "department_id":{"type":"number","minLength":1}
             },
             "required": ["email","project_id","org_id"],
             // "message": "Custom message"
