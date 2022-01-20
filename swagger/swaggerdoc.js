@@ -1225,6 +1225,85 @@ const SwaggerModels = () => {
           }
         }
       },
+      '/configuration/addThirdPartyConnectorToken': {
+        post: {
+          tags: [
+            'Configuration',
+          ],
+          summary: 'Add Third Party Connectors tokens',
+          description: `
+            Description     : Add Third Party Connectors tokens
+            Sample Url      : ${baseURL}configuration/addThirdPartyConnectorToken`,
+          produces: [
+            'application/json'
+          ],
+          parameters : [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation. ',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide project id, connector id, and token details.',
+              schema: {
+                type: 'object',
+                properties: {
+                project_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  },
+                  connector_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  },
+                  token: {
+                    type: 'string',
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.',
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       // '/reference/getOrgTypes': {
       //   get: {
       //     tags: [

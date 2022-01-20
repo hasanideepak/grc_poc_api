@@ -168,8 +168,16 @@ router.get('/getConfiguration/:org_id/:account_id?/:project_id?', async (req, re
     third_party_connectors: resp_thirdPartyConnector.results
   });
 
-
 })
+
+router.post('/addThirdPartyConnectorToken', async (req, res) => {
+  const { project_id, connector_id, token } = req.body;
+  const schema_nm = req.headers.schema_nm;
+  const connectorType = 'third_party_connector'
+  let sql = `update ${schema_nm}.project_config set additional_info = '${token}' where project_id = ${project_id} and config_value = '${connector_id}' and config_type = '${connectorType}'`;
+  let resp = await selectSql(sql);
+  res.send(resp);
+});
 
 
 

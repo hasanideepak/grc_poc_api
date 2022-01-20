@@ -128,6 +128,19 @@ const SCHEMAS = {
             // "message": "Custom message"
         }
     },
+    'addThirdPartyConnectorToken':{
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "project_id": {"type":"number","minLength":1},
+                "connector_id": {"type":"number","minLength":1},
+                "token": {"type":"string","minLength":1}
+            },
+            "required": ["project_id","connector_id","token"],
+            // "message": "Custom message"
+        }
+    }
 
    
 };
