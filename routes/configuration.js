@@ -104,9 +104,9 @@ router.post('/deleteKeyMember', async (req, res) => {
 })
 
 router.post('/deleteTaskOwner', async (req, res) => {
-  const { org_id, emp_id } = req.body;
+  const { org_id, emp_id, project_id } = req.body;
   const schema_nm = req.headers.schema_nm;
-  let sql = `CALL ${schema_nm}.usp_delete_task_owner(${org_id},${emp_id},'${schema_nm}')`;
+  let sql = `CALL ${schema_nm}.usp_delete_task_owner(${org_id},${emp_id},${project_id},'${schema_nm}')`;
   let resp = await selectSql(sql);
   res.send(resp);
 })
