@@ -179,6 +179,14 @@ router.post('/addThirdPartyConnectorToken', async (req, res) => {
   res.send(resp);
 });
 
+router.get('/getThirdPartyConnectors/:project_id', async (req,res) => {
+  const {project_id} = req.params;
+  const schema_nm = req.headers.schema_nm;
+  let sql = `select config_value as connector_id from ${schema_nm}.project_config where project_id = ${project_id} and config_type = 'third_party_connector' and status = 'A' `;
+  let resp = await selectSql(sql);
+  res.send(resp);
+})
+
 
 
 export default router;
