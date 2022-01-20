@@ -182,7 +182,7 @@ router.post('/addThirdPartyConnectorToken', async (req, res) => {
 router.get('/getThirdPartyConnectors/:project_id', async (req,res) => {
   const {project_id} = req.params;
   const schema_nm = req.headers.schema_nm;
-  let sql = `select config_value as connector_id from ${schema_nm}.project_config where project_id = ${project_id} and config_type = 'third_party_connector' and status = 'A' `;
+  let sql = `select a.config_value as connector_id,b.name from master_1.project_config a,reference.third_party_connectors b where a.project_id = ${project_id} and a.config_type = 'third_party_connector' and a.status = 'A' and cast(a.config_value as integer) = b.id`;
   let resp = await selectSql(sql);
   res.send(resp);
 })
