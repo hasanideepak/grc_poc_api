@@ -149,14 +149,14 @@ router.get('/getConfiguration/:org_id/:account_id?/:project_id?', async (req, re
     where a.org_id = ${org_id} and a.emp_id = b.emp_id and b.dept_id = c.id and c.is_management = 'N' and d.emp_id = a.emp_id and d.project_id = ${pro_id}`
   resp_taskowner = await selectSql(taskOwner_sql);
 
-  let framework_sql = `SELECT a.id,a.name,case coalesce(b.config_value,'') when '' then 'N' else 'Y' end as is_selected from ${schema_nm}.project_config b right join reference.frameworks a on cast(b.config_value as integer) = a.id and b.project_id = ${pro_id} and b.config_type = 'framework'`
+  let framework_sql = `SELECT a.id,a.name,case coalesce(b.config_value,'') when '' then 'N' else 'Y' end as is_selected from ${schema_nm}.project_config b right join reference.frameworks a on cast(b.config_value as integer) = a.id and b.project_id = ${pro_id} and b.config_type = 'framework' and b.status ='A'`
   resp_frameworks = await selectSql(framework_sql);
 
   let servicePartner_sql = `select b.config_value as partner_id,c.emp_id,c.emp_id,c.first_name as full_name,c.email from ${schema_nm}.orgs a,${schema_nm}.project_config b, ${schema_nm}.org_employees c 
   where b.project_id = ${pro_id} and b.config_type = 'service_partner' and a.org_id = c.org_id and cast(b.config_value as integer) = c.org_id`
   resp_servicePartner = await selectSql(servicePartner_sql);
 
-  let thirdPartyConnector_sql = `SELECT a.id,a.name,case coalesce(b.config_value,'') when '' then 'N' else 'Y' end as is_selected from ${schema_nm}.project_config b right join reference.third_party_connectors a on cast(b.config_value as integer) = a.id and b.project_id = ${pro_id} and b.config_type = 'third_party_connector'`
+  let thirdPartyConnector_sql = `SELECT a.id,a.name,case coalesce(b.config_value,'') when '' then 'N' else 'Y' end as is_selected from ${schema_nm}.project_config b right join reference.third_party_connectors a on cast(b.config_value as integer) = a.id and b.project_id = ${pro_id} and b.config_type = 'third_party_connector' and b.status = 'A'`
   resp_thirdPartyConnector = await selectSql(thirdPartyConnector_sql);
 
   res.send({ status_code : 'air200',message:'Success', 
