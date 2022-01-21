@@ -140,6 +140,29 @@ const SCHEMAS = {
             "required": ["project_id","connector_id","token"],
             // "message": "Custom message"
         }
+    },
+    'forgot_password':{
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "username": {"type":"string","minLength":1}
+            },
+            "required": ["username"],
+            // "message": "Custom message"
+        }
+    },
+    'reset_password':{
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "password": {"type":"string","minLength":1},
+                "token": {"type":"string","minLength":1}
+            },
+            "required": ["password","token"],
+            // "message": "Custom message"
+        }
     }
 
    

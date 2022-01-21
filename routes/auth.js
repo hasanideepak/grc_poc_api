@@ -1,7 +1,8 @@
 import express from 'express';
-import { createAuthToken } from '../utils/helper.js';
-import { selectSql } from '../utils/pg_helper.js';
+import { createAuthToken, generateUUID } from '../utils/helper.js';
+import { insertSql, selectSql, updateSql } from '../utils/pg_helper.js';
 import error_resp from '../constants/errors.js'
+import EmailServices from '../utils/email_service.js';
 
 const router = express.Router();
 
@@ -32,4 +33,46 @@ router.post('/login', async (req, res) => {
         res.status(error_resp.Email_Required.status_code).send(error_resp.Email_Required.error_msg);
     }
 });
+
+router.post('/forgot_password', async (req, res) => {
+    const { username } = req.body;
+    const schema_nm = req.headers.schema_nm;
+    let sql = `select user_id,username from ${schema_nm}.users where username = '${username}'`;
+    let resp = await selectSql(sql);
+    
+    if (resp.results.length > 0) {
+        let user_id = resp.results[0].user_id, email = resp.results[0].username, token = await generateUUID();;
+        let app_url = `${process.env.APP_URL}resetpassword/${token}`;
+        let msg = `Hi,\n Please click below link to reset you password \n ${app_url} \n Thanks`;
+        EmailServices.Send({ 'from': 'deepak.hasani@algoventures.com', 'subject': `Reset Password`, 'html': msg, 'to': email });
+
+        sql = `insert into ${schema_nm}.password_token(created_on,status,token,user_id)
+               values(now(),'A','${token}',${user_id})`;
+        resp = await insertSql(sql);
+        res.status(200).send({ status_code: 'air200', message: 'Success' });
+    } else {
+        res.status(404).send({ status_code: 'air404', message: 'No user found..!' });
+    }
+});
+
+router.post('/reset_password', async (req, res) => {
+    const { password, token } = req.body;
+    const schema_nm = req.headers.schema_nm;
+    let sql = `select user_id from ${schema_nm}.password_token where token = '${token}' and status = 'A' and EXTRACT(EPOCH FROM (now()-created_on)) < 1800 limit 1`;
+    let resp = await selectSql(sql);
+    if (resp.results.length > 0) {
+        if (password == undefined || password == '' || password == 'undefined') {
+            res.status(error_resp.Invalid_Password.status_code).send(error_resp.Invalid_Password.error_msg);
+        } else {
+            let user_id = resp.results[0].user_id;
+            sql = `update ${schema_nm}.users set password = md5('${password}') where user_id = ${user_id}`;
+            resp = await updateSql(sql);
+            sql = `update ${schema_nm}.password_token set status = 'I' where token = '${token}'`;
+            let resp1 = await updateSql(sql);
+            res.status(200).send(resp);
+        }
+    } else {
+        res.status(error_resp.Token_Expired.status_code).send(error_resp.Token_Expired.error_msg);
+    }
+})
 export default router;
