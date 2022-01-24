@@ -152,7 +152,7 @@ router.get('/getConfiguration/:org_id/:account_id?/:project_id?', async (req, re
   resp_keymemebers = await selectSql(keymember_sql);
 
   let taskOwner_sql = `select a.emp_id,a.email,c.name as department_name from ${schema_nm}.org_employees a ,reference.authority c, ${schema_nm}.x_project_emp d
-  where d.authority_id = c.id and c.is_management = 'Y' and d.emp_id = a.emp_id and d.project_id = ${pro_id} group by a.emp_id,c.name`
+  where d.authority_id = c.id and c.is_management = 'N' and d.emp_id = a.emp_id and d.project_id = ${pro_id} group by a.emp_id,c.name`
   resp_taskowner = await selectSql(taskOwner_sql);
 
   let framework_sql = `SELECT a.id,a.name,case coalesce(b.config_value,'') when '' then 'N' else 'Y' end as is_selected from ${schema_nm}.project_config b right join reference.frameworks a on cast(b.config_value as integer) = a.id and b.project_id = ${pro_id} and b.config_type = 'framework' and b.status ='A'`
