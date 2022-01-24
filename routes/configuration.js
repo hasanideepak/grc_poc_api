@@ -36,9 +36,9 @@ router.post('/addProjectFrameworks', async (req, res) => {
 })
 
 router.post('/addKeyMember', async (req, res) => {
-  const { email, org_id, project_id, department_id } = req.body;
+  const { email, org_id, project_id, authority_id } = req.body;
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
-  let sql = `CALL ${schema_nm}.usp_setup_keymember('${email}',${org_id},${project_id},${department_id},${user_id},'${schema_nm}')`;
+  let sql = `CALL ${schema_nm}.usp_setup_keymember('${email}',${org_id},${project_id},${authority_id},${user_id},'${schema_nm}')`;
   let resp = await selectSql(sql);
   sql = `select emp_id from ${schema_nm}.org_employees where email = '${email}'`
   let resp1 = await selectSql(sql);
@@ -62,9 +62,9 @@ router.post('/addServicePartner', async (req, res) => {
 })
 
 router.post('/addTaskOwner', async (req, res) => {
-  const { email, first_name, last_name, org_id, project_id, department_id } = req.body;
+  const { email, first_name, last_name, org_id, project_id, authority_id } = req.body;
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
-  let sql = `CALL ${schema_nm}.usp_add_task_owner('${email}','${first_name}','${last_name}',${org_id},${project_id},${department_id},${user_id},'${schema_nm}')`;
+  let sql = `CALL ${schema_nm}.usp_add_task_owner('${email}','${first_name}','${last_name}',${org_id},${project_id},${authority_id},${user_id},'${schema_nm}')`;
   let resp = await selectSql(sql);
   sql = `select emp_id from ${schema_nm}.org_employees where email = '${email}'`
   let resp1 = await selectSql(sql);
@@ -147,11 +147,11 @@ router.get('/getConfiguration/:org_id/:account_id?/:project_id?', async (req, re
     resp_project_account = await selectSql(sql);
     pro_id = project_id;
   }
-  let keymember_sql = `select a.emp_id,a.email,c.name as department_name from ${schema_nm}.org_employees a, ${schema_nm}.x_org_dept_emp b,reference.departments c, ${schema_nm}.x_project_emp d
+  let keymember_sql = `select a.emp_id,a.email,c.name as authority_name from ${schema_nm}.org_employees a, ${schema_nm}.x_org_dept_emp b,reference.authority c, ${schema_nm}.x_project_emp d
   where a.emp_id = b.emp_id and b.dept_id = c.id and c.is_management = 'Y' and d.emp_id = a.emp_id and d.project_id = ${pro_id} and d.project_id = b.project_id group by a.emp_id,c.name`
   resp_keymemebers = await selectSql(keymember_sql);
 
-  let taskOwner_sql = `select a.emp_id,a.email,a.first_name,a.last_name,c.name as department_name from ${schema_nm}.org_employees a, ${schema_nm}.x_org_dept_emp b,reference.departments c, ${schema_nm}.x_project_emp d
+  let taskOwner_sql = `select a.emp_id,a.email,a.first_name,a.last_name,c.name as authority_name from ${schema_nm}.org_employees a, ${schema_nm}.x_org_dept_emp b,reference.authority c, ${schema_nm}.x_project_emp d
   where a.emp_id = b.emp_id and b.dept_id = c.id and c.is_management = 'N' and d.emp_id = a.emp_id and d.project_id = ${pro_id} and d.project_id = b.project_id group by a.emp_id,c.name`
   resp_taskowner = await selectSql(taskOwner_sql);
 

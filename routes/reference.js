@@ -8,9 +8,9 @@ router.get('/getFrameworks', async (req,res) => {
     let resp = await selectSql(sql);
     res.send(resp);
 })
-router.get('/getDepartments/:is_management', async (req,res) => {
+router.get('/getAuthorities/:is_management', async (req,res) => {
     const {is_management} = req.params;
-    let sql = `select id,name from reference.departments where is_management = '${is_management}'`;
+    let sql = `select id,name from reference.authority where is_management = '${is_management}'`;
     let resp = await selectSql(sql);
     res.send(resp);
 })

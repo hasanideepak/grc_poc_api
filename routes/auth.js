@@ -11,8 +11,9 @@ router.post('/login', async (req, res) => {
     const schema_nm = req.headers.schema_nm;
     if (email != undefined) {
         if (password != undefined || password != '' || password != null) {
-            let sql = `select a.user_id,a.email,a.org_emp_id,concat(b.first_name,' ',b.last_name) as name,b.phone,c.name as org_name,c.logo,c.org_id,case coalesce(d.account_id,0) when 0 then 'N' else 'Y' end as is_onboard,dept.name as access_role from ${schema_nm}.users a,${schema_nm}.org_employees b,reference.departments dept,${schema_nm}.x_org_dept_emp org_dept,${schema_nm}.orgs c left join ${schema_nm}.accounts d on c.org_id = d.org_id 
-            where a.username = '${email}' and a.password = '${password}' and a.org_emp_id = b.emp_id and b.org_id = c.org_id and b.emp_id = org_dept.emp_id and org_dept.dept_id = dept.id`;
+            let sql = `select a.user_id,a.username as email,a.org_emp_id,concat(b.first_name,' ',b.last_name) as name,b.phone,c.name as org_name,c.logo,c.org_id,
+            case coalesce(d.account_id,0) when 0 then 'N' else 'Y' end as is_onboard,au.name as access_role from ${schema_nm}.users a,${schema_nm}.org_employees b,reference.authority au,${schema_nm}.x_project_emp xpe ,${schema_nm}.orgs c left join ${schema_nm}.accounts d on c.org_id = d.org_id 
+            where a.username = '${email}' and a.password = '${password}' and a.org_emp_id = b.emp_id and b.emp_id = xpe.emp_id and b.org_id = c.org_id and xpe.authority_id=au.id`;
             
             let resp = await selectSql(sql);
             if (resp.results.length > 0) {

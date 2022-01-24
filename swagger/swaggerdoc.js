@@ -180,15 +180,15 @@ const SwaggerModels = () => {
           }
         }
       },
-      '/reference/getDepartments/:is_management': {
+      '/reference/getAuthorities/:is_management': {
         get: {
           tags: [
             'Reference',
           ],
-          summary: 'Get All Departments',
+          summary: 'Get All Authorities',
           description: `
-            Description     : Get All Departments
-            Sample Url      : ${baseURL}reference/getDepartments`,
+            Description     : Get All Authorities
+            Sample Url      : ${baseURL}reference/getAuthorities`,
           produces: [
             'application/json'
           ],
@@ -235,11 +235,11 @@ const SwaggerModels = () => {
                       properties: {
                         id: {
                           type: 'number',
-                          description:'Department ID'
+                          description:'Authority ID'
                         },
                         name: {
                           type: 'string',
-                          description:'Department Name'
+                          description:'Authority Name'
                         }
                       }
                     }
@@ -540,7 +540,7 @@ const SwaggerModels = () => {
                     example: 12,
                     required: true
                   },
-                  department_id: {
+                  authority_id: {
                     type: 'number',
                     example: 12,
                     required: true
@@ -713,7 +713,7 @@ const SwaggerModels = () => {
                     example: 12,
                     required: true
                   },
-                  department_id: {
+                  authority_id: {
                     type: 'number',
                     example: 12,
                     required: true
