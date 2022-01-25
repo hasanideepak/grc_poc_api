@@ -25,7 +25,8 @@ export const updateSql = async (sql) => {
         try {
             postgress.query(sql, function (error, results) {
                 if (error) {
-                    resolve(error_resp.Query_Error.error_msg.toString().replace('<error_msg>', error.detail));
+                    error_resp.Query_Error.error_msg.error = error.detail;
+                    resolve(error_resp.Query_Error.error_msg);
                 } else {
                     resolve({ status_code: 'air200', message: 'Success', rows_affected: results.affectedRows });
                 }

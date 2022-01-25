@@ -320,7 +320,7 @@ router.delete('/deleteVendorById/:id', async (req,res) => {
   const { id } = req.params;
   const schema_nm = req.headers.schema_nm;
 
-  let sql = `delete from ${schema_nm}.project_config where id = ${id}`;
+  let sql = `delete from ${schema_nm}.project_config where config_id = ${id}`;
   let resp = await updateSql(sql);
   res.send(resp);
 })
