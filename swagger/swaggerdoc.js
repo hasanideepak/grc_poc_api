@@ -75,23 +75,23 @@ const SwaggerModels = () => {
                           email: {
                             type: 'string'
                           },
-                          org_emp_id:{
-                            type:'integer'
+                          org_emp_id: {
+                            type: 'integer'
                           },
-                          name:{
-                            type:'string'
+                          name: {
+                            type: 'string'
                           },
-                          phone:{
-                            type:'integer'
+                          phone: {
+                            type: 'integer'
                           },
-                          org_name:{
-                            type:'string'
+                          org_name: {
+                            type: 'string'
                           },
-                          logo:{
-                            type:'string'
+                          logo: {
+                            type: 'string'
                           },
-                          is_onboard:{
-                            type:'string'
+                          is_onboard: {
+                            type: 'string'
                           }
                         }
                       },
@@ -103,6 +103,129 @@ const SwaggerModels = () => {
                         type: 'string'
                       }
                     }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      'forgot_password': {
+        post: {
+          tags: [
+            'Auth',
+          ],
+          summary: 'Forgot Password',
+          description: `
+            Description     : Forgot Password api
+            Sample Url      : ${baseURL}auth/forgot_password`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide username',
+              schema: {
+                type: 'object',
+                properties: {
+                  username: {
+                    type: 'string',
+                    example: 'shahidajmeri786',
+                    required: true
+                  }
+                }
+              }
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation. ',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  statusCode: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      'reset_password': {
+        post: {
+          tags: [
+            'Auth',
+          ],
+          summary: 'Reset Password',
+          description: `
+            Description     : Reset Password api
+            Sample Url      : ${baseURL}auth/reset_password`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide password and token.',
+              schema: {
+                type: 'object',
+                properties: {
+                  password: {
+                    type: 'string',
+                    example: 'dd65467r',
+                    required: true
+                  },
+                  token: {
+                    type: 'string',
+                    example: 'dd65467rdsd54545dsasdfr',
+                    required: true
+                  }
+                }
+              }
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation. ',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  statusCode: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
                   }
                 }
               }
@@ -122,7 +245,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -165,11 +288,11 @@ const SwaggerModels = () => {
                       properties: {
                         id: {
                           type: 'number',
-                          description:'Framework ID'
+                          description: 'Framework ID'
                         },
                         name: {
                           type: 'string',
-                          description:'Framework Name'
+                          description: 'Framework Name'
                         }
                       }
                     }
@@ -192,7 +315,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -235,11 +358,11 @@ const SwaggerModels = () => {
                       properties: {
                         id: {
                           type: 'number',
-                          description:'Authority ID'
+                          description: 'Authority ID'
                         },
                         name: {
                           type: 'string',
-                          description:'Authority Name'
+                          description: 'Authority Name'
                         }
                       }
                     }
@@ -262,7 +385,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -305,11 +428,11 @@ const SwaggerModels = () => {
                       properties: {
                         id: {
                           type: 'number',
-                          description:'Role ID'
+                          description: 'Role ID'
                         },
                         name: {
                           type: 'string',
-                          description:'Role Name'
+                          description: 'Role Name'
                         }
                       }
                     }
@@ -332,7 +455,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -400,7 +523,7 @@ const SwaggerModels = () => {
                       properties: {
                         account_id: {
                           type: 'number',
-                          description:'Account ID'
+                          description: 'Account ID'
                         }
                       }
                     }
@@ -423,7 +546,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -451,14 +574,14 @@ const SwaggerModels = () => {
               schema: {
                 type: 'object',
                 properties: {
-                 project_id: {
+                  project_id: {
                     type: 'number',
                     example: 1,
                     required: true
                   },
                   framework_ids: {
                     type: 'array',
-                    example: [1,2,3],
+                    example: [1, 2, 3],
                     required: true
                   }
                 }
@@ -497,7 +620,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -581,7 +704,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -660,7 +783,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -754,7 +877,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -797,11 +920,11 @@ const SwaggerModels = () => {
                       properties: {
                         id: {
                           type: 'number',
-                          description:'Connector ID'
+                          description: 'Connector ID'
                         },
                         name: {
                           type: 'string',
-                          description:'Connector Name'
+                          description: 'Connector Name'
                         }
                       }
                     }
@@ -824,7 +947,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -852,14 +975,14 @@ const SwaggerModels = () => {
               schema: {
                 type: 'object',
                 properties: {
-                project_id: {
+                  project_id: {
                     type: 'number',
                     example: 12,
                     required: true
                   },
-                  connector_id: {
-                    type: 'number',
-                    example: 12,
+                  connector_ids: {
+                    type: 'array',
+                    example: [12, 16],
                     required: true
                   }
                 }
@@ -887,7 +1010,7 @@ const SwaggerModels = () => {
         }
       },
       '/configuration/deleteKeyMember': {
-        post: {
+        delete: {
           tags: [
             'Configuration',
           ],
@@ -898,7 +1021,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -926,7 +1049,7 @@ const SwaggerModels = () => {
               schema: {
                 type: 'object',
                 properties: {
-                org_id: {
+                  org_id: {
                     type: 'number',
                     example: 12,
                     required: true
@@ -934,6 +1057,11 @@ const SwaggerModels = () => {
                   emp_id: {
                     type: 'number',
                     example: 12,
+                    required: true
+                  },
+                  project_id: {
+                    type: 'number',
+                    example: 15,
                     required: true
                   }
                 }
@@ -961,7 +1089,7 @@ const SwaggerModels = () => {
         }
       },
       '/configuration/deleteTaskOwner': {
-        post: {
+        delete: {
           tags: [
             'Configuration',
           ],
@@ -972,7 +1100,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -1000,7 +1128,7 @@ const SwaggerModels = () => {
               schema: {
                 type: 'object',
                 properties: {
-                org_id: {
+                  org_id: {
                     type: 'number',
                     example: 12,
                     required: true
@@ -1008,6 +1136,11 @@ const SwaggerModels = () => {
                   emp_id: {
                     type: 'number',
                     example: 12,
+                    required: true
+                  },
+                  project_id: {
+                    type: 'number',
+                    example: 15,
                     required: true
                   }
                 }
@@ -1035,7 +1168,7 @@ const SwaggerModels = () => {
         }
       },
       '/configuration/deleteServicePartner': {
-        post: {
+        delete: {
           tags: [
             'Configuration',
           ],
@@ -1046,7 +1179,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -1074,7 +1207,7 @@ const SwaggerModels = () => {
               schema: {
                 type: 'object',
                 properties: {
-                org_id: {
+                  org_id: {
                     type: 'number',
                     example: 12,
                     required: true
@@ -1082,6 +1215,11 @@ const SwaggerModels = () => {
                   emp_id: {
                     type: 'number',
                     example: 12,
+                    required: true
+                  },
+                  project_id: {
+                    type: 'number',
+                    example: 15,
                     required: true
                   }
                 }
@@ -1120,7 +1258,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -1194,27 +1332,27 @@ const SwaggerModels = () => {
                       properties: {
                         accounts_and_projects: {
                           type: 'object',
-                          description:'Account and Project Data'
+                          description: 'Account and Project Data'
                         },
                         keymembers: {
                           type: 'object',
-                          description:'Keymembers Data'
+                          description: 'Keymembers Data'
                         },
                         task_owners: {
                           type: 'object',
-                          description:'Task Owners Data'
+                          description: 'Task Owners Data'
                         },
                         frameworks: {
                           type: 'object',
-                          description:'Frameworks Data'
+                          description: 'Frameworks Data'
                         },
                         service_partners: {
                           type: 'object',
-                          description:'Service Partners Data'
+                          description: 'Service Partners Data'
                         },
                         third_part_connectors: {
                           type: 'object',
-                          description:'Third Party Connectors'
+                          description: 'Third Party Connectors'
                         }
                       }
                     }
@@ -1237,7 +1375,7 @@ const SwaggerModels = () => {
           produces: [
             'application/json'
           ],
-          parameters : [
+          parameters: [
             {
               in: 'header',
               name: 'Authorization',
@@ -1265,7 +1403,7 @@ const SwaggerModels = () => {
               schema: {
                 type: 'object',
                 properties: {
-                project_id: {
+                  project_id: {
                     type: 'number',
                     example: 12,
                     required: true
@@ -1278,6 +1416,386 @@ const SwaggerModels = () => {
                   token: {
                     type: 'string',
                     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.',
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/addPeople': {
+        post: {
+          tags: [
+            'Configuration',
+          ],
+          summary: 'Add People',
+          description: `
+            Description     : Add People
+            Sample Url      : ${baseURL}configuration/addPeople`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation. ',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide project id, connector id, and token details.',
+              schema: {
+                type: 'object',
+                properties: {
+                  project_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  },
+                  employees: {
+                    type: 'string',
+                    example: '12',
+                    required: true
+                  },
+                  consultants: {
+                    type: 'string',
+                    example: '5',
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/addTechnologyAssets': {
+        post: {
+          tags: [
+            'Configuration',
+          ],
+          summary: 'Add Technology assests',
+          description: `
+            Description     : Add Technology assests
+            Sample Url      : ${baseURL}configuration/addTechnologyAssets`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation. ',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide project id, connector id, and token details.',
+              schema: {
+                type: 'object',
+                properties: {
+                  project_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  },
+                  endpoints: {
+                    type: 'string',
+                    example: '12',
+                    required: true
+                  },
+                  servers: {
+                    type: 'string',
+                    example: '5',
+                    required: true
+                  },
+                  mobile_devices: {
+                    type: 'string',
+                    example: '5',
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/addVendor': {
+        post: {
+          tags: [
+            'Configuration',
+          ],
+          summary: 'Add Vendor',
+          description: `
+            Description     : Add Vendor
+            Sample Url      : ${baseURL}configuration/addVendor`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation. ',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide project id, connector id, and token details.',
+              schema: {
+                type: 'object',
+                properties: {
+                  project_id: {
+                    type: 'number',
+                    example: 12,
+                    required: true
+                  },
+                  vendor: {
+                    type: 'string',
+                    example: 'adinfinitum',
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/createThirdPartyUtility': {
+        post: {
+          tags: [
+            'Configuration',
+          ],
+          summary: 'Create Third Party Utilities',
+          description: `
+            Description     : Create Third Party Utilities
+            Sample Url      : ${baseURL}configuration/createThirdPartyUtility`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation. ',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide project id, connector id, and token details.',
+              schema: {
+                type: 'object',
+                properties: {
+                  utility_name: {
+                    type: 'string',
+                    example: 'adinfinitum',
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/addThirdPartyUtilities': {
+        post: {
+          tags: [
+            'Configuration',
+          ],
+          summary: 'Add Third Party Utilities',
+          description: `
+            Description     : Add Third Party Utilities
+            Sample Url      : ${baseURL}configuration/addThirdPartyUtilities`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation. ',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide project id, connector id, and token details.',
+              schema: {
+                type: 'object',
+                properties: {
+                  project_id: {
+                    type: 'string',
+                    example: 15,
+                    required: true
+                  },
+                  utilities_ids: {
+                    type: 'array',
+                    example: [15,16],
                     required: true
                   }
                 }
@@ -1364,7 +1882,7 @@ const SwaggerModels = () => {
       //     }
       //   }
       // },
-      
+
     }
   };
 };

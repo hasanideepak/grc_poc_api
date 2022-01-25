@@ -96,7 +96,7 @@ router.post('/addThirdPartyConnector', async (req, res) => {
 
 })
 
-router.post('/deleteKeyMember', async (req, res) => {
+router.delete('/deleteKeyMember', async (req, res) => {
   const { org_id, emp_id, project_id } = req.body;
   const schema_nm = req.headers.schema_nm;
   let sql = `CALL ${schema_nm}.usp_delete_keymember(${org_id},${emp_id},${project_id},'${schema_nm}')`;
@@ -104,7 +104,7 @@ router.post('/deleteKeyMember', async (req, res) => {
   res.send(resp);
 })
 
-router.post('/deleteTaskOwner', async (req, res) => {
+router.delete('/deleteTaskOwner', async (req, res) => {
   const { org_id, emp_id, project_id } = req.body;
   const schema_nm = req.headers.schema_nm;
   let sql = `CALL ${schema_nm}.usp_delete_task_owner(${org_id},${emp_id},${project_id},'${schema_nm}')`;
@@ -112,7 +112,7 @@ router.post('/deleteTaskOwner', async (req, res) => {
   res.send(resp);
 })
 
-router.post('/deleteServicePartner', async (req, res) => {
+router.delete('/deleteServicePartner', async (req, res) => {
   const { org_id, emp_id, project_id } = req.body;
   const schema_nm = req.headers.schema_nm;
   let sql = `CALL ${schema_nm}.usp_delete_service_partner(${org_id},${emp_id},${project_id},'${schema_nm}')`;
