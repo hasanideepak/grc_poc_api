@@ -1,5 +1,5 @@
 import express from 'express';
-import { selectSql, insertSql, updateSql,RecordExist } from '../utils/pg_helper.js';
+import { selectSql, insertSql, updateSql, RecordExist } from '../utils/pg_helper.js';
 const router = express.Router();
 import error_resp from '../constants/errors.js'
 
@@ -133,8 +133,8 @@ router.get('/getConfiguration/:org_id/:account_id?/:project_id?', async (req, re
   let resp_thirdPartyConnector = ''
   let pro_id = ''
 
-  let org_exist = await RecordExist('org_id',org_id,'orgs',schema_nm);
-  if(!org_exist){
+  let org_exist = await RecordExist('org_id', org_id, 'orgs', schema_nm);
+  if (!org_exist) {
     res.status(error_resp.Invalid_Org_ID.status_code).send(error_resp.Invalid_Org_ID.error_msg);
   }
 
@@ -151,7 +151,7 @@ router.get('/getConfiguration/:org_id/:account_id?/:project_id?', async (req, re
   where d.authority_id = c.id and c.is_management = 'Y' and d.emp_id = a.emp_id and d.project_id = ${pro_id} group by a.emp_id,c.name`
   resp_keymemebers = await selectSql(keymember_sql);
 
-  let taskOwner_sql = `select a.emp_id,a.email,c.name as department_name from ${schema_nm}.org_employees a ,reference.authority c, ${schema_nm}.x_project_emp d
+  let taskOwner_sql = `select a.emp_id,a.email,c.name as department_name,a.first_name,a.last_name from ${schema_nm}.org_employees a ,reference.authority c, ${schema_nm}.x_project_emp d
   where d.authority_id = c.id and c.is_management = 'N' and d.emp_id = a.emp_id and d.project_id = ${pro_id} group by a.emp_id,c.name`
   resp_taskowner = await selectSql(taskOwner_sql);
 
@@ -192,8 +192,138 @@ router.get('/getThirdPartyConnectors/:project_id', async (req, res) => {
   let sql = `select a.config_value as connector_id,b.name from ${schema_nm}.project_config a,reference.third_party_connectors b where a.project_id = ${project_id} and a.config_type = 'third_party_connector' and a.status = 'A' and cast(a.config_value as integer) = b.id`;
   let resp = await selectSql(sql);
   res.send(resp);
-})
+});
 
+router.post('/addPeople', async (req, res) => {
+  const { project_id, employees, consultants } = req.body;
+  const schema_nm = req.headers.schema_nm, user_id = req.headers.user_id;
+  let sql = `select config_value from ${schema_nm}.project_config where config_type = 'employees' and project_id = ${project_id}`;
+  let resp = await selectSql(sql);
+  if (resp.results.length > 0) {
+    sql = `update ${schema_nm}.project_config set config_value = '${employees}',last_upd_on = now(), last_upd_by = '${user_id}' where config_type = 'employees' and project_id = ${project_id}`;
+    resp = await updateSql(sql);
+    sql = `update ${schema_nm}.project_config set config_value = '${consultants}',last_upd_on = now(), last_upd_by = '${user_id}' where config_type = 'consultants' and project_id = ${project_id}`;
+    resp = await updateSql(sql);
+  } else {
+    sql = `insert into ${schema_nm}.project_config(project_id,config_type,config_value,status,created_on,created_by)
+            values(${project_id},'employees','${employees}','A',now(),'${user_id}'),
+            (${project_id},'consultants','${consultants}','A',now(),'${user_id}')`;
+    resp = await insertSql(sql);
+  }
+  res.send(resp);
+});
+
+router.post('/addTechnologyAssets', async (req, res) => {
+  const { project_id, endpoints, servers, mobile_devices } = req.body;
+  const schema_nm = req.headers.schema_nm, user_id = req.headers.user_id;
+  let sql = `select config_value from ${schema_nm}.project_config where config_type = 'endpoints' and project_id = ${project_id}`;
+  let resp = await selectSql(sql);
+  if (resp.results.length > 0) {
+    sql = `update ${schema_nm}.project_config set config_value = '${endpoints}',last_upd_on = now(), last_upd_by = '${user_id}' where config_type = 'endpoints' and project_id = ${project_id}`;
+    resp = await updateSql(sql);
+    sql = `update ${schema_nm}.project_config set config_value = '${servers}',last_upd_on = now(), last_upd_by = '${user_id}' where config_type = 'servers' and project_id = ${project_id}`;
+    resp = await updateSql(sql);
+    sql = `update ${schema_nm}.project_config set config_value = '${mobile_devices}',last_upd_on = now(), last_upd_by = '${user_id}' where config_type = 'mobile_devices' and project_id = ${project_id}`;
+    resp = await updateSql(sql);
+  } else {
+    sql = `insert into ${schema_nm}.project_config(project_id,config_type,config_value,status,created_on,created_by)
+            values(${project_id},'endpoints','${endpoints}','A',now(),'${user_id}'),
+            (${project_id},'servers','${servers}','A',now(),'${user_id}'),
+            (${project_id},'mobile_devices','${mobile_devices}','A',now(),'${user_id}')`;
+    resp = await insertSql(sql);
+  }
+  res.send(resp);
+});
+
+router.post('/addVendor', async (req, res) => {
+  const { project_id, vendor } = req.body;
+  const schema_nm = req.headers.schema_nm, user_id = req.headers.user_id;
+  let sql = `select config_value from ${schema_nm}.project_config where config_type = 'vendor' and config_value = '${vendor}' and project_id = ${project_id}`;
+  let resp = await selectSql(sql);
+  if (resp.results.length > 0) {
+    res.status(error_resp.Vendor_Exists.status_code).send(error_resp.Vendor_Exists.error_msg);
+  } else {
+    sql = `insert into ${schema_nm}.project_config(project_id,config_type,config_value,status,created_on,created_by)
+            values(${project_id},'vendor','${vendor}','A',now(),'${user_id}')`;
+    resp = await insertSql(sql);
+    res.send(resp);
+  }
+});
+
+router.get('/getThirdPartyUtilities/:project_id', async (req, res) => {
+  const { project_id } = req.params;
+  const user_id = req.headers.user_id;
+  let sql = `SELECT a.id,a.name,case coalesce(b.config_value,'') when '' then 'N' else 'Y' end as is_selected from ${schema_nm}.project_config b right join reference.third_party_utilities a on cast(b.config_value as integer) = a.id and b.project_id = ${project_id} and b.config_type = 'third_party_utility' and b.status = 'A' where (a.source = 'standard' or a.created_by = '${user_id}')`;
+  let resp = await selectSql(sql);
+  res.send(resp);
+});
+
+router.post('/createThirdPartyUtility', async (req, res) => {
+  const { utility_name } = req.body;
+  const user_id = req.headers.user_id;
+  let sql = `insert into reference.third_party_utilities(name,status,source,created_on,created_by) values('${utility_name}','A','custom',now(),'${user_id}')`;
+  let resp = await insertSql(sql);
+  res.send(resp);
+});
+
+router.post('/addThirdPartyUtilities', async (req, res) => {
+  const { project_id, utility_ids } = req.body;
+  const configType = 'third_party_utility';
+  const status = 'A';
+  const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
+
+
+  let utilityIds = JSON.stringify(utility_ids)
+  let resp = '';
+  let updateQuery = `update ${schema_nm}.project_config set status = 'D' where project_id = ${project_id} and config_type = '${configType}'`
+  let respUpdate = await updateSql(updateQuery)
+
+  utility_ids.forEach(async (item) => {
+    let sql = `insert into ${schema_nm}.project_config (project_id,config_type,config_value,status,created_on,created_by)
+      values (${project_id},'${configType}','${item}','${status}',NOW(),${user_id}) 
+      on conflict (project_id,config_type,config_value) do update set status ='${status}',last_upd_on = NOW(),last_upd_by = ${user_id}`;
+    resp = await insertSql(sql);
+  });
+  res.send({ status_code: 'air200', message: 'Success' });
+});
+
+router.get('/getScopeDetails/:project_id', async (req,res) => {
+  const {project_id} = req.params;
+  const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
+  let peoples = '',technology_assets = '',vendors = '',third_party_utilities = '';
+  
+  let sql = `select (select config_value from ${schema_nm}.project_config where config_type = 'employees' and status = 'A' and project_id = ${project_id} ) as employees,
+  (select config_value from ${schema_nm}.project_config where config_type = 'consultants' and status = 'A' and project_id = ${project_id}) as consultants`
+  peoples = await selectSql(sql);
+  
+  sql = `select (select config_value from ${schema_nm}.project_config where config_type = 'endpoints' and status = 'A' and project_id = ${project_id} ) as endpoints,
+  (select config_value from ${schema_nm}.project_config where config_type = 'servers' and status = 'A' and project_id = ${project_id}) as servers,
+  (select config_value from ${schema_nm}.project_config where config_type = 'mobile_devices' and status = 'A' and project_id = ${project_id}) as mobile_devices`
+  technology_assets = await selectSql(sql);
+
+  sql = `select config_id as id,config_value as vendor from ${schema_nm}.project_config where config_type = 'vendor' and status = 'A' and project_id = ${project_id}`;
+  vendors = await selectSql(sql);
+
+  sql = `SELECT a.id,a.name,case coalesce(b.config_value,'') when '' then 'N' else 'Y' end as is_selected from ${schema_nm}.project_config b right join reference.third_party_utilities a on cast(b.config_value as integer) = a.id and b.project_id = ${project_id} and b.config_type = 'third_party_utility' and b.status = 'A' where (a.source = 'standard' or a.created_by = '${user_id}')`
+  third_party_utilities = await selectSql(sql);
+
+  res.send({
+    status_code: 'air200', message: 'Success',
+    peoples: peoples.results,
+    technology_assets: technology_assets.results,
+    vendors: vendors.results,
+    third_party_utilities: third_party_utilities.results
+  });
+});
+
+router.delete('/deleteVendorById/:id', async (req,res) => {
+  const { id } = req.params;
+  const schema_nm = req.headers.schema_nm;
+
+  let sql = `delete from ${schema_nm}.project_config where id = ${id}`;
+  let resp = await updateSql(sql);
+  res.send(resp);
+})
 
 
 export default router;

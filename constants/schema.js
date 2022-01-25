@@ -163,8 +163,69 @@ const SCHEMAS = {
             "required": ["password","token"],
             // "message": "Custom message"
         }
+    },
+    'addPeople':{
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "project_id": {"type":"number","minLength":1},
+                "employees": {"type":"string","minLength":1},
+                "consultants": {"type":"string","minLength":1}
+            },
+            "required": ["project_id","employees","consultants"],
+            // "message": "Custom message"
+        }
+    },
+    'addTechnologyAssets':{
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "project_id": {"type":"number","minLength":1},
+                "endpoints": {"type":"string","minLength":1},
+                "servers": {"type":"string","minLength":1},
+                "mobile_devices": {"type":"string","minLength":1}
+            },
+            "required": ["project_id","endpoints","servers","mobile_devices"],
+            // "message": "Custom message"
+        }
+    },
+    'addVendor':{
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "project_id": {"type":"number","minLength":1},
+                "vendor": {"type":"string","minLength":1}
+            },
+            "required": ["project_id","vendor"],
+            // "message": "Custom message"
+        }
+    },
+    'addThirdPartyUtilities': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "project_id": {"type":"number","minLength":1},
+                "utility_ids": {"type":"array"}
+            },
+            "required": ["utility_ids","project_id"],
+            // "message": "Custom message"
+        }
+    },
+    'createThirdPartyUtility': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "utility_name": {"type":"string","minLength":1}
+            },
+            "required": ["utility_name"],
+            // "message": "Custom message"
+        }
     }
-
    
 };
 

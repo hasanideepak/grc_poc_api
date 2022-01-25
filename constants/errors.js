@@ -7,7 +7,8 @@ const error = {
     Schema_Error: { status_code: 401, error_msg: { status_code: 'air401', message: 'Error occured in schema validation' } },
     Query_Error: { status_code: 404, error_msg: { status_code: 'air404', message: 'There is some technical issue, please try after some time', error:'<error_msg>' } },
     Invalid_Org_ID: { status_code: 404, error_msg: { statusCode: 'air404', message: 'Invalid Organization ID'} },
-    Token_Expired: { status_code: 404, error_msg: { status_code: 'air404', message: 'Token is expired !' }}
+    Token_Expired: { status_code: 404, error_msg: { status_code: 'air404', message: 'Token is expired !' }},
+    Vendor_Exists: { status_code: 404, error_msg: { status_code: 'air404', message: 'Vendor already exists' }}
 }
 
 Object.freeze(error);
