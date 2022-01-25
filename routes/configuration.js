@@ -252,7 +252,7 @@ router.post('/addVendor', async (req, res) => {
 
 router.get('/getThirdPartyUtilities/:project_id', async (req, res) => {
   const { project_id } = req.params;
-  const user_id = req.headers.user_id;
+  const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
   let sql = `SELECT a.id,a.name,case coalesce(b.config_value,'') when '' then 'N' else 'Y' end as is_selected from ${schema_nm}.project_config b right join reference.third_party_utilities a on cast(b.config_value as integer) = a.id and b.project_id = ${project_id} and b.config_type = 'third_party_utility' and b.status = 'A' where (a.source = 'standard' or a.created_by = '${user_id}')`;
   let resp = await selectSql(sql);
   res.send(resp);
