@@ -135,7 +135,7 @@ router.get('/getConfiguration/:org_id/:account_id?/:project_id?', async (req, re
 
   let org_exist = await RecordExist('org_id', org_id, 'orgs', schema_nm);
   if (!org_exist) {
-    res.status(error_resp.Invalid_Org_ID.status_code).send(error_resp.Invalid_Org_ID.error_msg);
+    res.status(error_resp.Invalid_Org_ID.http_status_code).send(error_resp.Invalid_Org_ID.error_msg);
   }
 
   if (typeof project_id == 'undefined') {
@@ -241,7 +241,7 @@ router.post('/addVendor', async (req, res) => {
   let sql = `select config_value from ${schema_nm}.project_config where config_type = 'vendor' and config_value = '${vendor}' and project_id = ${project_id}`;
   let resp = await selectSql(sql);
   if (resp.results.length > 0) {
-    res.status(error_resp.Vendor_Exists.status_code).send(error_resp.Vendor_Exists.error_msg);
+    res.status(error_resp.Vendor_Exists.http_status_code).send(error_resp.Vendor_Exists.error_msg);
   } else {
     sql = `insert into ${schema_nm}.project_config(project_id,config_type,config_value,status,created_on,created_by)
             values(${project_id},'vendor','${vendor}','A',now(),'${user_id}')`;

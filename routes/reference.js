@@ -4,7 +4,7 @@ import { selectSql,insertSql } from '../utils/pg_helper.js';
 const router = express.Router();
 
 router.get('/getFrameworks', async (req,res) => {
-    let sql = `select id,name from reference.frameworks`;
+    let sql = `select id,name from reference.frameworks where source = 'standard'`;
     let resp = await selectSql(sql);
     res.send(resp);
 })

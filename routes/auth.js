@@ -11,27 +11,32 @@ router.post('/login', async (req, res) => {
     const schema_nm = req.headers.schema_nm;
     if (email != undefined) {
         if (password != undefined || password != '' || password != null) {
+            // let sql = `select a.user_id,a.username as email,a.org_emp_id,concat(b.first_name,' ',b.last_name) as name,b.phone,c.name as org_name,c.logo,c.org_id,
+            // case coalesce(d.account_id,0) when 0 then 'N' else 'Y' end as is_onboard,au.name as access_role from ${schema_nm}.users a,${schema_nm}.org_employees b,reference.authority au,${schema_nm}.x_project_emp xpe ,${schema_nm}.orgs c left join ${schema_nm}.accounts d on c.org_id = d.org_id 
+            // where a.username = '${email}' and a.passwd = '${password}' and a.org_emp_id = b.emp_id and b.emp_id = xpe.emp_id and b.org_id = c.org_id and xpe.authority_id=au.id`;
             let sql = `select a.user_id,a.username as email,a.org_emp_id,concat(b.first_name,' ',b.last_name) as name,b.phone,c.name as org_name,c.logo,c.org_id,
-            case coalesce(d.account_id,0) when 0 then 'N' else 'Y' end as is_onboard,au.name as access_role from ${schema_nm}.users a,${schema_nm}.org_employees b,reference.authority au,${schema_nm}.x_project_emp xpe ,${schema_nm}.orgs c left join ${schema_nm}.accounts d on c.org_id = d.org_id 
-            where a.username = '${email}' and a.password = '${password}' and a.org_emp_id = b.emp_id and b.emp_id = xpe.emp_id and b.org_id = c.org_id and xpe.authority_id=au.id`;
-            
+            case coalesce(d.account_id,0) when 0 then 'N' else 'Y' end as is_onboard, 
+            case b.super_user when 'Y' then 'CISO' else 
+            (select au.name from reference.authority au,${schema_nm}.x_project_emp xpe,${schema_nm}.projects p where au.id = xpe.authority_id and p.project_id = xpe.project_id and p.account_id = d.account_id) end as access_role
+            from ${schema_nm}.users a,${schema_nm}.org_employees b,${schema_nm}.orgs c left join ${schema_nm}.accounts d on c.org_id = d.org_id 
+            where a.username = '${email}' and a.passwd = '${password}' and a.org_emp_id = b.emp_id and b.org_id = c.org_id`
             let resp = await selectSql(sql);
             if (resp.results.length > 0) {
                 let result = resp.results[0];
-                let accesstoken = await createAuthToken(resp.results[0].user_id,schema_nm);
+                let accesstoken = await createAuthToken(resp.results[0].user_id, schema_nm);
                 let results = { user: result };
                 results.accessToken = accesstoken;
                 results.tokenType = 'Bearer';
                 let response = { statusCode: 'air200', message: 'Success', results: results };
                 res.status(200).send(response);
             } else {
-                res.status(error_resp.Bad_Credentials.status_code).send(error_resp.Bad_Credentials.error_msg);
+                res.status(error_resp.Bad_Credentials.http_status_code).send(error_resp.Bad_Credentials.error_msg);
             }
         } else {
-            res.status(error_resp.Invalid_Password.status_code).send(error_resp.Invalid_Password.error_msg);
+            res.status(error_resp.Invalid_Password.http_status_code).send(error_resp.Invalid_Password.error_msg);
         }
     } else {
-        res.status(error_resp.Email_Required.status_code).send(error_resp.Email_Required.error_msg);
+        res.status(error_resp.Email_Required.http_status_code).send(error_resp.Email_Required.error_msg);
     }
 });
 
@@ -40,7 +45,7 @@ router.post('/forgot_password', async (req, res) => {
     const schema_nm = req.headers.schema_nm;
     let sql = `select user_id,username from ${schema_nm}.users where username = '${username}'`;
     let resp = await selectSql(sql);
-    
+
     if (resp.results.length > 0) {
         let user_id = resp.results[0].user_id, email = resp.results[0].username, token = await generateUUID();;
         let app_url = `${process.env.APP_URL}resetpassword/${token}`;
@@ -52,7 +57,7 @@ router.post('/forgot_password', async (req, res) => {
         resp = await insertSql(sql);
         res.status(200).send({ status_code: 'air200', message: 'Success' });
     } else {
-        res.status(404).send({ status_code: 'air404', message: 'No user found..!' });
+        res.status(error_resp.Invalid_User.http_status_code).send(error_resp.Invalid_User.error_msg);
     }
 });
 
@@ -63,17 +68,17 @@ router.post('/reset_password', async (req, res) => {
     let resp = await selectSql(sql);
     if (resp.results.length > 0) {
         if (password == undefined || password == '' || password == 'undefined') {
-            res.status(error_resp.Invalid_Password.status_code).send(error_resp.Invalid_Password.error_msg);
+            res.status(error_resp.Invalid_Password.http_status_code).send(error_resp.Invalid_Password.error_msg);
         } else {
             let user_id = resp.results[0].user_id;
-            sql = `update ${schema_nm}.users set password = md5('${password}') where user_id = ${user_id}`;
+            sql = `update ${schema_nm}.users set passwd = md5('${password}') where user_id = ${user_id}`;
             resp = await updateSql(sql);
             sql = `update ${schema_nm}.password_token set status = 'I' where token = '${token}'`;
             let resp1 = await updateSql(sql);
             res.status(200).send(resp);
         }
     } else {
-        res.status(error_resp.Token_Expired.status_code).send(error_resp.Token_Expired.error_msg);
+        res.status(error_resp.Token_Expired.http_status_code).send(error_resp.Token_Expired.error_msg);
     }
 })
 export default router;

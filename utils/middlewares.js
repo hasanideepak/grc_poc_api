@@ -22,7 +22,7 @@ export const validateSession = async (req, res, next) => {
             let decoded = jwt.decode(token);
             // console.log('decoded', decoded);
             if (decoded == null) {
-                res.status(error_resp.Invalid_Token.status_code).send(error_resp.Invalid_Token.error_msg);
+                res.status(error_resp.Invalid_Token.http_status_code).send(error_resp.Invalid_Token.error_msg);
             } else {
                 let user_id = decoded.sub;
                 req.headers.user_id = user_id;
@@ -31,11 +31,11 @@ export const validateSession = async (req, res, next) => {
                 if (resp.results.length > 0) {
                     next();
                 } else {
-                    res.status(error_resp.Invalid_Token.status_code).send(error_resp.Invalid_Token.error_msg);
+                    res.status(error_resp.Invalid_Token.http_status_code).send(error_resp.Invalid_Token.error_msg);
                 }
             }
         } else {
-            res.status(error_resp.Invalid_Token.status_code).send(error_resp.Invalid_Token.error_msg);
+            res.status(error_resp.Invalid_Token.http_status_code).send(error_resp.Invalid_Token.error_msg);
         }
 
     }
@@ -53,10 +53,10 @@ export const saasValidation = async (req, res, next) => {
             req.headers.schema_nm = schema_nm;
             next()
         } else {
-            res.status(error_resp.Invalid_APIKEY.status_code).send(error_resp.Invalid_APIKEY.error_msg);
+            res.status(error_resp.Invalid_APIKEY.http_status_code).send(error_resp.Invalid_APIKEY.error_msg);
         }
     } else {
-        res.status(error_resp.Invalid_APIKEY.status_code).send(error_resp.Invalid_APIKEY.error_msg);
+        res.status(error_resp.Invalid_APIKEY.http_status_code).send(error_resp.Invalid_APIKEY.error_msg);
     }
 }
 export const schemaValidation = async (req, res, next) => {
