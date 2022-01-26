@@ -9,7 +9,8 @@ const error = {
     Invalid_Org_ID: { http_status_code: 404, error_msg: { statusCode: 'air404', message: 'Invalid Organization ID'} },
     Token_Expired: { http_status_code: 404, error_msg: { status_code: 'air404', message: 'Token is expired !' }},
     Vendor_Exists: { http_status_code: 404, error_msg: { status_code: 'air404', message: 'Vendor already exists' }},
-    Invalid_User: { http_status_code: 404, error_msg: { status_code: 'air404', message: 'No user found..!' }}
+    Invalid_User: { http_status_code: 404, error_msg: { status_code: 'air404', message: 'No user found..!' }},
+    No_Record: { http_status_code: 404, error_msg: { status_code: 'air404', message: 'No record found..!' }}
 }
 
 Object.freeze(error);

@@ -141,7 +141,12 @@ router.get('/getConfiguration/:org_id/:account_id?/:project_id?', async (req, re
   if (typeof project_id == 'undefined') {
     let sql = `select a.name as account_name,b.name as project_name,b.project_id from ${schema_nm}.accounts a,${schema_nm}.projects b where a.org_id = ${org_id} and a.account_id = b.account_id order by b.project_id desc limit 1`;
     resp_project_account = await selectSql(sql);
-    pro_id = resp_project_account.results[0].project_id;
+    if (resp_project_account.results.length == 0) {
+      res.status(error_resp.No_Record.http_status_code).send(error_resp.No_Record.error_msg);
+    } else {
+      pro_id = resp_project_account.results[0].project_id;
+    }
+
   } else {
     let sql = `select a.name as account_name,b.name as project_name from ${schema_nm}.accounts a,${schema_nm}.projects b where a.org_id = ${org_id} and a.account_id = b.account_id and b.project_id = ${project_id}`;
     resp_project_account = await selectSql(sql);
@@ -287,15 +292,15 @@ router.post('/addThirdPartyUtilities', async (req, res) => {
   res.send({ status_code: 'air200', message: 'Success' });
 });
 
-router.get('/getScopeDetails/:project_id', async (req,res) => {
-  const {project_id} = req.params;
+router.get('/getScopeDetails/:project_id', async (req, res) => {
+  const { project_id } = req.params;
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
-  let peoples = '',technology_assets = '',vendors = '',third_party_utilities = '';
-  
+  let peoples = '', technology_assets = '', vendors = '', third_party_utilities = '';
+
   let sql = `select (select config_value from ${schema_nm}.project_config where config_type = 'employees' and status = 'A' and project_id = ${project_id} ) as employees,
   (select config_value from ${schema_nm}.project_config where config_type = 'consultants' and status = 'A' and project_id = ${project_id}) as consultants`
   peoples = await selectSql(sql);
-  
+
   sql = `select (select config_value from ${schema_nm}.project_config where config_type = 'endpoints' and status = 'A' and project_id = ${project_id} ) as endpoints,
   (select config_value from ${schema_nm}.project_config where config_type = 'servers' and status = 'A' and project_id = ${project_id}) as servers,
   (select config_value from ${schema_nm}.project_config where config_type = 'mobile_devices' and status = 'A' and project_id = ${project_id}) as mobile_devices`
@@ -316,7 +321,7 @@ router.get('/getScopeDetails/:project_id', async (req,res) => {
   });
 });
 
-router.delete('/deleteVendorById/:id', async (req,res) => {
+router.delete('/deleteVendorById/:id', async (req, res) => {
   const { id } = req.params;
   const schema_nm = req.headers.schema_nm;
 
