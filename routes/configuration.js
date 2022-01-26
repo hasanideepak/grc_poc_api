@@ -30,7 +30,16 @@ router.post('/addProjectFrameworks', async (req, res) => {
       values (${project_id},'${configType}','${item}','${status}',NOW(),${user_id}) 
       on conflict (project_id,config_type,config_value) do update set status ='${status}',last_upd_on = NOW(),last_upd_by = ${user_id}`;
     resp = await insertSql(sql);
+    //insert into project tasks
+    let project_task_sql = `insert into ${schema_nm}.project_tasks(project_id,framework_control_id,framework_id,criteria_id,control_category,domain_id,ref_task_id,frequency_duration,frequency_unit,
+    evidence_type_id,is_redo,responsible_authority,approval_authority,status,task_status,task_source,created_on,created_by)
+    select ${project_id},fc2.framework_control_id,fc2.framework_id,fc2.criteria_id,fc2.control_category,fc2.domain_id,fc2.task_id,fc2.frequency_duration,fc2.frequency_unit,
+    fc2.evidence_type_id,fc2.is_redo,fc2.responsible_authority,fc2.approval_authority,fc2.status,'pending','internal',now(),${user_id} from reference.framework_controls fc2 where fc2.framework_control_id in (select xfc.int_framework_control_id
+    from reference.framework_controls fc, reference.x_framework_controls xfc where fc.framework_id = ${item} and xfc.ext_framework_control_id = fc.framework_control_id )`
+    await insertSql(project_task_sql);
+    
   });
+
   res.send({ status_code: 'air200', message: 'Success' });
 
 })

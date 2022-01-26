@@ -10,7 +10,8 @@ const error = {
     Token_Expired: { http_status_code: 401, error_msg: { status_code: 'air401', message: 'Token is expired !' }},
     Vendor_Exists: { http_status_code: 409, error_msg: { status_code: 'air409', message: 'Vendor already exists' }},
     Invalid_User: { http_status_code: 404, error_msg: { status_code: 'air404', message: 'No user found..!' }},
-    No_Record: { http_status_code: 404, error_msg: { status_code: 'air404', message: 'No record found..!' }}
+    No_Record: { http_status_code: 404, error_msg: { status_code: 'air404', message: 'No record found..!' }},
+    Not_Authorized: { http_status_code: 401, error_msg: { statusCode: 'air401', message: 'You are not authorized to use this service' } }
 }
 
 Object.freeze(error);

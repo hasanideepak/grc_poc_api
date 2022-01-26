@@ -225,8 +225,22 @@ const SCHEMAS = {
             "required": ["utility_name"],
             // "message": "Custom message"
         }
+    },
+    'listTasks': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "project_id": {"type":"number","minLength":1},
+                "authority": {"type":"string","minLength":1},
+                "start_date": {"type":"string","minLength":1},
+                "end_date": {"type":"string","minLength":1},
+                "task_status": {"type":"string","minLength":1}
+            },
+            "required": ["project_id","authority","start_date","end_date","task_status"],
+            // "message": "Custom message"
+        }
     }
-   
 };
 
 Object.freeze(SCHEMAS);

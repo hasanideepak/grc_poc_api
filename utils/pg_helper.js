@@ -43,7 +43,8 @@ export const insertSql = async (sql) => {
         try {
             postgress.query(sql, function (error, results) {
                 if (error) {
-                    resolve(error_resp.Query_Error.error_msg.toString().replace('<error_msg>', error.detail));
+                    error_resp.Query_Error.error_msg.error = error.detail;
+                    resolve(error_resp.Query_Error.error_msg);
                 } else {
                     // console.log(results)
                     resolve({ status_code: 'air200', message: 'Success', message_id: results.rows[0] });
