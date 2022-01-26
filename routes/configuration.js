@@ -45,9 +45,9 @@ router.post('/addProjectFrameworks', async (req, res) => {
 })
 
 router.post('/addKeyMember', async (req, res) => {
-  const { email, org_id, project_id, authority_id } = req.body;
+  const { email, org_id, project_id, authority_id, first_name, last_name } = req.body;
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
-  let sql = `CALL ${schema_nm}.usp_setup_keymember('${email}',${org_id},${project_id},${authority_id},${user_id},'${schema_nm}')`;
+  let sql = `CALL ${schema_nm}.usp_setup_keymember('${email}',${org_id},${project_id},${authority_id},${user_id},'${first_name}','${last_name}','${schema_nm}')`;
   let resp = await selectSql(sql);
   sql = `select emp_id from ${schema_nm}.org_employees where email = '${email}'`
   let resp1 = await selectSql(sql);
@@ -58,9 +58,9 @@ router.post('/addKeyMember', async (req, res) => {
 })
 
 router.post('/addServicePartner', async (req, res) => {
-  const { email, full_name, project_id } = req.body;
+  const { email, first_name, last_name, project_id } = req.body;
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
-  let sql = `CALL ${schema_nm}.usp_add_service_partner('${email}','${full_name}',${project_id},${user_id},'${schema_nm}')`;
+  let sql = `CALL ${schema_nm}.usp_add_service_partner('${email}','${first_name}','${last_name}',${project_id},${user_id},'${schema_nm}')`;
   let resp = await selectSql(sql);
   sql = `select emp_id from ${schema_nm}.org_employees where email = '${email}'`
   let resp1 = await selectSql(sql);
@@ -161,7 +161,7 @@ router.get('/getConfiguration/:org_id/:account_id?/:project_id?', async (req, re
     resp_project_account = await selectSql(sql);
     pro_id = project_id;
   }
-  let keymember_sql = `select a.emp_id,a.email,c.name as department_name from ${schema_nm}.org_employees a ,reference.authority c, ${schema_nm}.x_project_emp d
+  let keymember_sql = `select a.emp_id,a.email,c.name as department_name,a.first_name,a.last_name from ${schema_nm}.org_employees a ,reference.authority c, ${schema_nm}.x_project_emp d
   where d.authority_id = c.id and c.is_management = 'Y' and d.emp_id = a.emp_id and d.project_id = ${pro_id} group by a.emp_id,c.name`
   resp_keymemebers = await selectSql(keymember_sql);
 
@@ -172,7 +172,7 @@ router.get('/getConfiguration/:org_id/:account_id?/:project_id?', async (req, re
   let framework_sql = `SELECT a.id,a.name,case coalesce(b.config_value,'') when '' then 'N' else 'Y' end as is_selected from ${schema_nm}.project_config b right join reference.frameworks a on cast(b.config_value as integer) = a.id and b.project_id = ${pro_id} and b.config_type = 'framework' and b.status ='A' where a.source = 'standard'`
   resp_frameworks = await selectSql(framework_sql);
 
-  let servicePartner_sql = `select b.config_value as partner_id,c.emp_id,c.emp_id,c.first_name as full_name,c.email from ${schema_nm}.orgs a,${schema_nm}.project_config b, ${schema_nm}.org_employees c 
+  let servicePartner_sql = `select b.config_value as partner_id,c.emp_id,c.emp_id,c.email,c.first_name,c.last_name from ${schema_nm}.orgs a,${schema_nm}.project_config b, ${schema_nm}.org_employees c 
   where b.project_id = ${pro_id} and b.config_type = 'service_partner' and a.org_id = c.org_id and cast(b.config_value as integer) = c.org_id`
   resp_servicePartner = await selectSql(servicePartner_sql);
 
@@ -306,13 +306,13 @@ router.get('/getScopeDetails/:project_id', async (req, res) => {
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
   let peoples = '', technology_assets = '', vendors = '', third_party_utilities = '';
 
-  let sql = `select (select config_value from ${schema_nm}.project_config where config_type = 'employees' and status = 'A' and project_id = ${project_id} ) as employees,
-  (select config_value from ${schema_nm}.project_config where config_type = 'consultants' and status = 'A' and project_id = ${project_id}) as consultants`
+  let sql = `select * from (select coalesce((select config_value from ${schema_nm}.project_config where config_type = 'employees' and status = 'A' and project_id = ${project_id} ),'') as employees,
+  coalesce((select config_value from ${schema_nm}.project_config where config_type = 'consultants' and status = 'A' and project_id = ${project_id}),'') as consultants ) as t  where t.employees <> '' and t.consultants <> ''`
   peoples = await selectSql(sql);
 
-  sql = `select (select config_value from ${schema_nm}.project_config where config_type = 'endpoints' and status = 'A' and project_id = ${project_id} ) as endpoints,
+  sql = `select * from (select (select config_value from ${schema_nm}.project_config where config_type = 'endpoints' and status = 'A' and project_id = ${project_id} ) as endpoints,
   (select config_value from ${schema_nm}.project_config where config_type = 'servers' and status = 'A' and project_id = ${project_id}) as servers,
-  (select config_value from ${schema_nm}.project_config where config_type = 'mobile_devices' and status = 'A' and project_id = ${project_id}) as mobile_devices`
+  (select config_value from ${schema_nm}.project_config where config_type = 'mobile_devices' and status = 'A' and project_id = ${project_id}) as mobile_devices ) as t  where t.endpoints <> '' and t.servers <> '' and t.mobile_devices <> ''`
   technology_assets = await selectSql(sql);
 
   sql = `select config_id as id,config_value as vendor from ${schema_nm}.project_config where config_type = 'vendor' and status = 'A' and project_id = ${project_id}`;

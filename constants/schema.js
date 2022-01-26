@@ -45,9 +45,11 @@ const SCHEMAS = {
                 "email": {"type":"string","minLength":2},
                 "project_id": {"type":"number","minLength":1},
                 "org_id":{"type":"number","minLength":1},
-                "authority_id":{"type":"number","minLength":1}
+                "authority_id":{"type":"number","minLength":1},
+                "first_name":{"type":"string","minLength":3},
+                "last_name":{"type":"string","minLength":3}
             },
-            "required": ["email","project_id","org_id"],
+            "required": ["email","project_id","org_id","first_name","last_name","authority_id"],
             // "message": "Custom message"
         }
     },
@@ -58,9 +60,10 @@ const SCHEMAS = {
             "properties": {
                 "email": {"type":"string","minLength":2},
                 "project_id": {"type":"number","minLength":1},
-                "full_name":{"type":"string","minLength":3}
+                "first_name":{"type":"string","minLength":3},
+                "last_name":{"type":"string","minLength":3}
             },
-            "required": ["email","project_id","full_name"],
+            "required": ["email","project_id","first_name","last_name"],
             // "message": "Custom message"
         }
     },
