@@ -19,7 +19,7 @@ router.post('/listTasks', async (req, res) => {
         if(task_status != 'all'){
             task_status_condition = ` and pt.task_status = '${task_status}'`;
         }
-        let sql = `select pt.project_task_id,pt.task_status,to_char(pt.created_on,'DD Mon YYYY') as created_at,t.title,pt.ref_task_id from ${schema_nm}.project_tasks pt,reference.tasks t 
+        let sql = `select pt.project_task_id,pt.task_status,to_char(pt.created_on,'Mon DD, YYYY') as created_at,t.title,t.description,pt.ref_task_id from ${schema_nm}.project_tasks pt,reference.tasks t 
                    where pt.ref_task_id = t.id and t.status = 'A' and pt.project_id = ${project_id} and (pt.created_on::timestamp::date between '${start_date}' and '${end_date}') ${task_status_condition} ${auth_condition}`;
         let resp = await selectSql(sql);
         res.send(resp);           
