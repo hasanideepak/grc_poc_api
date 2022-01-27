@@ -1246,7 +1246,7 @@ const SwaggerModels = () => {
           }
         }
       },
-      '/configuration/onBoarding': {
+      '/configuration/getConfiguration': {
         get: {
           tags: [
             'Configuration',
@@ -1254,7 +1254,7 @@ const SwaggerModels = () => {
           summary: 'Get On Boarding Data by either Organization ID OR Account ID OR Project ID.',
           description: `
             Description     : Get On Boarding Data by either Organization ID OR Account ID OR Project ID.
-            Sample Url      : ${baseURL}reference/onBoarding`,
+            Sample Url      : ${baseURL}configuration/getConfiguration`,
           produces: [
             'application/json'
           ],
@@ -1280,7 +1280,7 @@ const SwaggerModels = () => {
               example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
             },
             {
-              in: 'header',
+              in: 'parameter',
               name: 'org_id',
               schema: {
                 type: 'number',
@@ -1290,7 +1290,7 @@ const SwaggerModels = () => {
               example: 2
             },
             {
-              in: 'header',
+              in: 'parameter',
               name: 'account_id',
               schema: {
                 type: 'number',
@@ -1300,7 +1300,7 @@ const SwaggerModels = () => {
               example: 10
             },
             {
-              in: 'header',
+              in: 'parameter',
               name: 'project_id',
               schema: {
                 type: 'number',
@@ -1802,6 +1802,282 @@ const SwaggerModels = () => {
               }
             }
           ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/getThirdPartyConnectors': {
+        get: {
+          tags: [
+            'Configuration',
+          ],
+          summary: 'Get Third Party connectors by Project ID.',
+          description: `
+            Description     : Get Third Party connectors by Project ID.
+            Sample Url      : ${baseURL}configuration/getThirdPartyConnectors`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation.',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'parameter',
+              name: 'project_id',
+              schema: {
+                type: 'number',
+              },
+              required: 'true',
+              description: 'Project ID',
+              example: 2
+            }],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/getThirdPartyUtilities': {
+        get: {
+          tags: [
+            'Configuration',
+          ],
+          summary: 'Get Third Party utilities by Project ID.',
+          description: `
+            Description     : Get Third Party utilities by Project ID.
+            Sample Url      : ${baseURL}configuration/getThirdPartyUtilities`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation.',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'parameter',
+              name: 'project_id',
+              schema: {
+                type: 'number',
+              },
+              required: 'true',
+              description: 'Project ID',
+              example: 2
+            }],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/getScopeDetails': {
+        get: {
+          tags: [
+            'Configuration',
+          ],
+          summary: 'Get Third Party utilities by Project ID.',
+          description: `
+            Description     : Get Scope details by Project ID.
+            Sample Url      : ${baseURL}configuration/getScopeDetails`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation.',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'parameter',
+              name: 'project_id',
+              schema: {
+                type: 'number',
+              },
+              required: 'true',
+              description: 'Project ID',
+              example: 2
+            }],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  },
+                  results: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        peoples: {
+                          type: 'object',
+                          description: 'Peoples Data'
+                        },
+                        technology_assets: {
+                          type: 'object',
+                          description: 'Technology assets Data'
+                        },
+                        vendors: {
+                          type: 'object',
+                          description: 'Vendors Data'
+                        },
+                        third_party_utilities: {
+                          type: 'object',
+                          description: 'Thirdparty utilities Data'
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/configuration/deleteVendorById': {
+        delete: {
+          tags: [
+            'Configuration',
+          ],
+          summary: 'Delete vendor by ID.',
+          description: `
+            Description     : Delete vendor by ID.
+            Sample Url      : ${baseURL}configuration/deleteVendorById`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation.',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'parameter',
+              name: 'id',
+              schema: {
+                type: 'number',
+              },
+              required: 'true',
+              description: 'Vendor ID',
+              example: 2
+            }],
           responses: {
             '200': {
               description: 'Success!',
