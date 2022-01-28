@@ -49,8 +49,8 @@ router.post('/forgot_password', async (req, res) => {
     if (resp.results.length > 0) {
         let user_id = resp.results[0].user_id, email = resp.results[0].username, token = await generateUUID();;
         let app_url = `${process.env.APP_URL}resetpassword/${token}`;
-        let msg = `Hi,\n Please click below link to reset you password \n ${app_url} \n Thanks`;
-        EmailServices.Send({ 'from': 'deepak.hasani@algoventures.com', 'subject': `Reset Password`, 'html': msg, 'to': email });
+        let msg = `<p>Hi,</p> <p>Please click below link to reset you password</p><p>${app_url}</p><p>Thanks</p>`;
+        EmailServices.Send({ 'from': 'support@accorian.com', 'subject': `Reset Password`, 'html': msg, 'to': email });
 
         sql = `insert into ${schema_nm}.password_token(created_on,status,token,user_id)
                values(now(),'A','${token}',${user_id})`;
