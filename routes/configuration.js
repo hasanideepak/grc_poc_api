@@ -2,6 +2,7 @@ import express from 'express';
 import { selectSql, insertSql, updateSql, RecordExist } from '../utils/pg_helper.js';
 const router = express.Router();
 import error_resp from '../constants/errors.js'
+import { getScopeDetails } from '../utils/helper.js';
 
 router.post('/setupAccount', async (req, res) => {
   const { account_name, project_name, org_id } = req.body;
@@ -37,7 +38,7 @@ router.post('/addProjectFrameworks', async (req, res) => {
     fc2.evidence_type_id,fc2.is_redo,fc2.responsible_authority,fc2.approval_authority,fc2.status,'pending','internal',now(),${user_id} from reference.framework_controls fc2 where fc2.framework_control_id in (select xfc.int_framework_control_id
     from reference.framework_controls fc, reference.x_framework_controls xfc where fc.framework_id = ${item} and xfc.ext_framework_control_id = fc.framework_control_id )`
     await insertSql(project_task_sql);
-    
+
   });
 
   res.send({ status_code: 'air200', message: 'Success' });
@@ -304,29 +305,14 @@ router.post('/addThirdPartyUtilities', async (req, res) => {
 router.get('/getScopeDetails/:project_id', async (req, res) => {
   const { project_id } = req.params;
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
-  let peoples = '', technology_assets = '', vendors = '', third_party_utilities = '';
 
-  let sql = `select * from (select coalesce((select config_value from ${schema_nm}.project_config where config_type = 'employees' and status = 'A' and project_id = ${project_id} ),'') as employees,
-  coalesce((select config_value from ${schema_nm}.project_config where config_type = 'consultants' and status = 'A' and project_id = ${project_id}),'') as consultants ) as t  where t.employees <> '' and t.consultants <> ''`
-  peoples = await selectSql(sql);
-
-  sql = `select * from (select (select config_value from ${schema_nm}.project_config where config_type = 'endpoints' and status = 'A' and project_id = ${project_id} ) as endpoints,
-  (select config_value from ${schema_nm}.project_config where config_type = 'servers' and status = 'A' and project_id = ${project_id}) as servers,
-  (select config_value from ${schema_nm}.project_config where config_type = 'mobile_devices' and status = 'A' and project_id = ${project_id}) as mobile_devices ) as t  where t.endpoints <> '' and t.servers <> '' and t.mobile_devices <> ''`
-  technology_assets = await selectSql(sql);
-
-  sql = `select config_id as id,config_value as vendor from ${schema_nm}.project_config where config_type = 'vendor' and status = 'A' and project_id = ${project_id}`;
-  vendors = await selectSql(sql);
-
-  sql = `SELECT a.id,a.name,case coalesce(b.config_value,'') when '' then 'N' else 'Y' end as is_selected from ${schema_nm}.project_config b right join reference.third_party_utilities a on cast(b.config_value as integer) = a.id and b.project_id = ${project_id} and b.config_type = 'third_party_utility' and b.status = 'A' where (a.source = 'standard' or a.created_by = '${user_id}')`
-  third_party_utilities = await selectSql(sql);
-
+  let [peoples, technology_assets, vendors, third_party_utilities] = await getScopeDetails(user_id, schema_nm, project_id)
   res.send({
     status_code: 'air200', message: 'Success',
-    peoples: peoples.results,
-    technology_assets: technology_assets.results,
-    vendors: vendors.results,
-    third_party_utilities: third_party_utilities.results
+    peoples: peoples,
+    technology_assets: technology_assets,
+    vendors: vendors,
+    third_party_utilities: third_party_utilities
   });
 });
 
