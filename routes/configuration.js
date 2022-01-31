@@ -2,7 +2,8 @@ import express from 'express';
 import { selectSql, insertSql, updateSql, RecordExist } from '../utils/pg_helper.js';
 const router = express.Router();
 import error_resp from '../constants/errors.js'
-import { getScopeDetails } from '../utils/helper.js';
+import { getScopeDetails,genMD5 } from '../utils/helper.js';
+import EmailServices from '../utils/email_service.js';
 
 router.post('/setupAccount', async (req, res) => {
   const { account_name, project_name, org_id } = req.body;
@@ -48,14 +49,32 @@ router.post('/addProjectFrameworks', async (req, res) => {
 router.post('/addKeyMember', async (req, res) => {
   const { email, org_id, project_id, authority_id, first_name, last_name } = req.body;
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
-  let sql = `CALL ${schema_nm}.usp_setup_keymember('${email}',${org_id},${project_id},${authority_id},${user_id},'${first_name}','${last_name}','${schema_nm}')`;
+  let vEmpId = 0;
+  let emailExists = 'N';
+  let existEmailSql = `select a.emp_id from ops_1.org_employees a where a.email = '${email}';`
+  let respExistEmailSql = await selectSql(existEmailSql);
+  
+  
+  let msg = `<p>Hi,</p> <p>Your account has created. You can login using this URL</p><p>Your login credetials are: </p><p><strong>Username:</strong>'${email}'</p><p><strong>Password:</strong>'temp123'</p><p>Thanks</p>`;
+  if(respExistEmailSql.results.length > 0){
+    emailExists = 'Y';
+    vEmpId = respExistEmailSql.results[0].emp_id
+    msg = `<p>Hi,</p> <p>User ${email} is added to your organaisation.</p><p>Thanks</p>`
+  }
+  
+  let sql = `CALL ${schema_nm}.usp_setup_keymember('${email}',${org_id},${project_id},${authority_id},${user_id},'${first_name}','${last_name}','${emailExists}',${vEmpId},'${schema_nm}')`;
   let resp = await selectSql(sql);
   sql = `select emp_id from ${schema_nm}.org_employees where email = '${email}'`
   let resp1 = await selectSql(sql);
   resp.emp_id = resp1.results[0].emp_id;
+  
+  if(resp1.results[0].emp_id){
+    EmailServices.Send({ 'from': 'support@accorian.com', 'subject': `Added Keymember`, 'html': msg, 'to': email });
+  }
+  
   delete resp.results;
   res.send(resp);
-
+  
 })
 
 router.post('/addServicePartner', async (req, res) => {
@@ -74,11 +93,31 @@ router.post('/addServicePartner', async (req, res) => {
 router.post('/addTaskOwner', async (req, res) => {
   const { email, first_name, last_name, org_id, project_id, authority_id } = req.body;
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
-  let sql = `CALL ${schema_nm}.usp_add_task_owner('${email}','${first_name}','${last_name}',${org_id},${project_id},${authority_id},${user_id},'${schema_nm}')`;
+  
+  let vEmpId = 0;
+  let emailExists = 'N';
+  let existEmailSql = `select a.emp_id from ops_1.org_employees a where a.email = '${email}';`
+  let respExistEmailSql = await selectSql(existEmailSql);
+  
+  
+  let msg = `<p>Hi,</p> <p>Your account has created. You can login using this URL</p><p>Your login credetials are: </p><p><strong>Username:</strong>'${email}'</p><p><strong>Password:</strong>'temp123'</p><p>Thanks</p>`;
+  if(respExistEmailSql.results.length > 0){
+    emailExists = 'Y';
+    vEmpId = respExistEmailSql.results[0].emp_id
+    msg = `<p>Hi,</p> <p>User ${email} is added to your organaisation.</p><p>Thanks</p>`
+  }
+  
+  
+  let sql = `CALL ${schema_nm}.usp_add_task_owner('${email}','${first_name}','${last_name}',${org_id},${project_id},${authority_id},${user_id},'${emailExists}',${vEmpId},'${schema_nm}')`;
   let resp = await selectSql(sql);
   sql = `select emp_id from ${schema_nm}.org_employees where email = '${email}'`
   let resp1 = await selectSql(sql);
   resp.emp_id = resp1.results[0].emp_id;
+
+  if(resp1.results[0].emp_id){
+    EmailServices.Send({ 'from': 'support@accorian.com', 'subject': `Added Keymember`, 'html': msg, 'to': email });
+  }
+
   delete resp.results;
   res.send(resp);
 
