@@ -53,9 +53,9 @@ router.post('/addKeyMember', async (req, res) => {
   let emailExists = 'N';
   let existEmailSql = `select a.emp_id from ops_1.org_employees a where a.email = '${email}';`
   let respExistEmailSql = await selectSql(existEmailSql);
+  let app_url = `${process.env.APP_URL}login`;
   
-  
-  let msg = `<p>Hi,</p> <p>Your account has created. You can login using this URL</p><p>Your login credetials are: </p><p><strong>Username:</strong>'${email}'</p><p><strong>Password:</strong>'temp123'</p><p>Thanks</p>`;
+  let msg = `<p>Hi,</p> <p>Your account has been created. You can login using this URL:${app_url}</p><p>Your login credetials are: </p><p><strong>Username:</strong>'${email}'</p><p><strong>Password:</strong>'temp123'</p><p>Thanks</p>`;
   if(respExistEmailSql.results.length > 0){
     emailExists = 'Y';
     vEmpId = respExistEmailSql.results[0].emp_id
@@ -98,9 +98,9 @@ router.post('/addTaskOwner', async (req, res) => {
   let emailExists = 'N';
   let existEmailSql = `select a.emp_id from ops_1.org_employees a where a.email = '${email}';`
   let respExistEmailSql = await selectSql(existEmailSql);
+  let app_url = `${process.env.APP_URL}login`;
   
-  
-  let msg = `<p>Hi,</p> <p>Your account has created. You can login using this URL</p><p>Your login credetials are: </p><p><strong>Username:</strong>'${email}'</p><p><strong>Password:</strong>'temp123'</p><p>Thanks</p>`;
+  let msg = `<p>Hi,</p> <p>Your account has been created. You can login using this URL</p><p>Your login credetials are: </p><p><strong>Username:</strong>'${email}'</p><p><strong>Password:</strong>'temp123'</p><p>Thanks</p>`;
   if(respExistEmailSql.results.length > 0){
     emailExists = 'Y';
     vEmpId = respExistEmailSql.results[0].emp_id
@@ -115,7 +115,7 @@ router.post('/addTaskOwner', async (req, res) => {
   resp.emp_id = resp1.results[0].emp_id;
 
   if(resp1.results[0].emp_id){
-    EmailServices.Send({ 'from': 'support@accorian.com', 'subject': `Added Keymember`, 'html': msg, 'to': email });
+    EmailServices.Send({ 'from': 'support@accorian.com', 'subject': `Added TaskOwner`, 'html': msg, 'to': email });
   }
 
   delete resp.results;
