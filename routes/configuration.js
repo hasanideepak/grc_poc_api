@@ -69,7 +69,7 @@ router.post('/addKeyMember', async (req, res) => {
   resp.emp_id = resp1.results[0].emp_id;
   
   if(resp1.results[0].emp_id){
-    EmailServices.Send({ 'from': 'support@accorian.com', 'subject': `Added Keymember`, 'html': msg, 'to': email });
+    EmailServices.Send({ 'from': 'support@accorian.com', 'subject': `New project invite`, 'html': msg, 'to': email });
   }
   
   delete resp.results;
@@ -115,7 +115,7 @@ router.post('/addTaskOwner', async (req, res) => {
   resp.emp_id = resp1.results[0].emp_id;
 
   if(resp1.results[0].emp_id){
-    EmailServices.Send({ 'from': 'support@accorian.com', 'subject': `Added TaskOwner`, 'html': msg, 'to': email });
+    EmailServices.Send({ 'from': 'support@accorian.com', 'subject': `New project invite`, 'html': msg, 'to': email });
   }
 
   delete resp.results;
