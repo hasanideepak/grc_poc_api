@@ -2,7 +2,7 @@ import express from 'express';
 import { selectSql, insertSql, updateSql, RecordExist } from '../utils/pg_helper.js';
 const router = express.Router();
 import error_resp from '../constants/errors.js'
-import { getScopeDetails,genMD5 } from '../utils/helper.js';
+import { getScopeDetails, sendNewUserEmail } from '../utils/helper.js';
 import EmailServices from '../utils/email_service.js';
 
 router.post('/setupAccount', async (req, res) => {
@@ -53,13 +53,9 @@ router.post('/addKeyMember', async (req, res) => {
   let emailExists = 'N';
   let existEmailSql = `select a.emp_id from ops_1.org_employees a where a.email = '${email}';`
   let respExistEmailSql = await selectSql(existEmailSql);
-  let app_url = `${process.env.APP_URL}login`;
-  
-  let msg = `<p>Hi,</p> <p>Your account has been created. You can login using this URL:${app_url}</p><p>Your login credetials are: </p><p><strong>Username:</strong>'${email}'</p><p><strong>Password:</strong>'temp123'</p><p>Thanks</p>`;
   if(respExistEmailSql.results.length > 0){
     emailExists = 'Y';
     vEmpId = respExistEmailSql.results[0].emp_id
-    msg = `<p>Hi,</p> <p>User ${email} is added to your organaisation.</p><p>Thanks</p>`
   }
   
   let sql = `CALL ${schema_nm}.usp_setup_keymember('${email}',${org_id},${project_id},${authority_id},${user_id},'${first_name}','${last_name}','${emailExists}',${vEmpId},'${schema_nm}')`;
@@ -67,9 +63,10 @@ router.post('/addKeyMember', async (req, res) => {
   sql = `select emp_id from ${schema_nm}.org_employees where email = '${email}'`
   let resp1 = await selectSql(sql);
   resp.emp_id = resp1.results[0].emp_id;
-  
-  if(resp1.results[0].emp_id){
-    EmailServices.Send({ 'from': 'support@accorian.com', 'subject': `New project invite`, 'html': msg, 'to': email });
+  vEmpId = resp1.results[0].emp_id;
+  console.log('emp id',vEmpId);
+  if(vEmpId !=0){
+    await sendNewUserEmail(emailExists,vEmpId,project_id,email,`${first_name} ${last_name}`,schema_nm,'new_key_member');
   }
   
   delete resp.results;
@@ -96,15 +93,12 @@ router.post('/addTaskOwner', async (req, res) => {
   
   let vEmpId = 0;
   let emailExists = 'N';
-  let existEmailSql = `select a.emp_id from ops_1.org_employees a where a.email = '${email}';`
+  let existEmailSql = `select a.emp_id from ${schema_nm}.org_employees a where a.email = '${email}';`
   let respExistEmailSql = await selectSql(existEmailSql);
-  let app_url = `${process.env.APP_URL}login`;
   
-  let msg = `<p>Hi,</p> <p>Your account has been created. You can login using this URL</p><p>Your login credetials are: </p><p><strong>Username:</strong>'${email}'</p><p><strong>Password:</strong>'temp123'</p><p>Thanks</p>`;
   if(respExistEmailSql.results.length > 0){
     emailExists = 'Y';
     vEmpId = respExistEmailSql.results[0].emp_id
-    msg = `<p>Hi,</p> <p>User ${email} is added to your organaisation.</p><p>Thanks</p>`
   }
   
   
@@ -113,9 +107,10 @@ router.post('/addTaskOwner', async (req, res) => {
   sql = `select emp_id from ${schema_nm}.org_employees where email = '${email}'`
   let resp1 = await selectSql(sql);
   resp.emp_id = resp1.results[0].emp_id;
-
-  if(resp1.results[0].emp_id){
-    EmailServices.Send({ 'from': 'support@accorian.com', 'subject': `New project invite`, 'html': msg, 'to': email });
+  vEmpId = resp1.results[0].emp_id;
+  console.log(vEmpId);
+  if(vEmpId != 0){
+    await sendNewUserEmail(emailExists,vEmpId,project_id,email,`${first_name} ${last_name}`,schema_nm,'new_task_owner');
   }
 
   delete resp.results;

@@ -64,7 +64,7 @@ router.post('/forgot_password', async (req, res) => {
 router.post('/reset_password', async (req, res) => {
     const { password, token } = req.body;
     const schema_nm = req.headers.schema_nm;
-    let sql = `select user_id from ${schema_nm}.password_token where token = '${token}' and status = 'A' and EXTRACT(EPOCH FROM (now()-created_on)) < 1800 limit 1`;
+    let sql = `select user_id from ${schema_nm}.password_token where token = '${token}' and status = 'A' and (EXTRACT(EPOCH FROM (now()-created_on)) < expiry_in_sec or expiry_in_sec = 0) limit 1`;
     let resp = await selectSql(sql);
     if (resp.results.length > 0) {
         if (password == undefined || password == '' || password == 'undefined') {
