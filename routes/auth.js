@@ -3,6 +3,7 @@ import { createAuthToken, generateUUID } from '../utils/helper.js';
 import { insertSql, selectSql, updateSql } from '../utils/pg_helper.js';
 import error_resp from '../constants/errors.js'
 import EmailServices from '../utils/email_service.js';
+import { validateSession } from '../utils/middlewares.js';
 
 const router = express.Router();
 
@@ -79,6 +80,24 @@ router.post('/reset_password', async (req, res) => {
         }
     } else {
         res.status(error_resp.Token_Expired.http_status_code).send(error_resp.Token_Expired.error_msg);
+    }
+});
+
+router.post('/changePassword', validateSession, async (req, res) => {
+    const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
+    const { current_password, new_password } = req.body;
+    let sql = `select password from ${schema_nm}.users where user_id = ${user_id}`;
+    let resp = await selectSql(sql);
+    if (resp.results.length > 0) {
+        if (current_password == resp.results[0].password) {
+            sql = `update ${schema_nm}.users set password = md5('${new_password}') where user_id = ${user_id}`;
+            resp = await updateSql(sql);
+            res.status(200).send(resp);
+        } else {
+            res.status(error_resp.Current_Password_Wrong.http_status_code).send(error_resp.Current_Password_Wrong.error_msg);
+        }
+    } else {
+        res.status(error_resp.Invalid_Token.http_status_code).send(error_resp.Invalid_Token.error_msg);
     }
 })
 export default router;

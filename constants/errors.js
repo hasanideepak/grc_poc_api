@@ -11,7 +11,8 @@ const error = {
     Vendor_Exists: { http_status_code: 409, error_msg: { status_code: 'air409', message: 'Vendor already exists' }},
     Invalid_User: { http_status_code: 404, error_msg: { status_code: 'air404', message: 'No user found..!' }},
     No_Record: { http_status_code: 404, error_msg: { status_code: 'air404', message: 'No record found..!' }},
-    Not_Authorized: { http_status_code: 401, error_msg: { statusCode: 'air401', message: 'You are not authorized to use this service' } }
+    Not_Authorized: { http_status_code: 401, error_msg: { statusCode: 'air401', message: 'You are not authorized to use this service' } },
+    Current_Password_Wrong: { http_status_code: 401, error_msg: { statusCode: 'air401', message: 'Current password is wrong' } }
 }
 
 Object.freeze(error);
