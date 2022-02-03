@@ -86,11 +86,11 @@ router.post('/reset_password', async (req, res) => {
 router.post('/changePassword', validateSession, async (req, res) => {
     const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
     const { current_password, new_password } = req.body;
-    let sql = `select password from ${schema_nm}.users where user_id = ${user_id}`;
+    let sql = `select passwd from ${schema_nm}.users where user_id = ${user_id}`;
     let resp = await selectSql(sql);
     if (resp.results.length > 0) {
-        if (current_password == resp.results[0].password) {
-            sql = `update ${schema_nm}.users set password = md5('${new_password}') where user_id = ${user_id}`;
+        if (current_password == resp.results[0].passwd) {
+            sql = `update ${schema_nm}.users set passwd = md5('${new_password}') where user_id = ${user_id}`;
             resp = await updateSql(sql);
             res.status(200).send(resp);
         } else {
