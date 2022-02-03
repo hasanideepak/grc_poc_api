@@ -243,6 +243,18 @@ const SCHEMAS = {
             "required": ["project_id","authority","start_date","end_date","task_status"],
             // "message": "Custom message"
         }
+    },
+    'changePassword': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "current_password": {"type":"string","minLength":1},
+                "new_password": {"type":"string","minLength":1}
+            },
+            "required": ["current_password","new_password"],
+            // "message": "Custom message"
+        }
     }
 };
 
