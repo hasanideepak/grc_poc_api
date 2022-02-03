@@ -19,7 +19,7 @@ router.post('/listTasks', async (req, res) => {
         if (task_status != 'all') {
             task_status_condition = ` and pt.task_status = '${task_status}'`;
         }
-        let sql = `select pt.project_task_id,pt.task_status,to_char(pt.created_on,'Mon DD, YYYY') as created_at,t.title,t.description,pt.ref_task_id from ${schema_nm}.project_tasks pt,reference.tasks t 
+        let sql = `select pt.project_task_id,pt.task_status,to_char(pt.created_on,'Mon DD, YYYY') as created_at,t.title,t.description,pt.ref_task_id,pt.task_end_date::timestamp::date as due_date,pt.priority from ${schema_nm}.project_tasks pt,reference.tasks t 
                    where pt.ref_task_id = t.id and t.status = 'A' and pt.project_id = ${project_id} and (pt.created_on::timestamp::date between '${start_date}' and '${end_date}') ${task_status_condition} ${auth_condition}`;
         let resp = await selectSql(sql);
         res.send(resp);
@@ -30,8 +30,9 @@ router.get('/getTaskDetails/:project_task_id', async (req, res) => {
     const { project_task_id } = req.params;
     const schema_nm = req.headers.schema_nm, user_id = req.headers.user_id;
     let task = '', applicable_assets = '', evidence_needed = '', control_mapping = '', project_id = '';
-    let sql = `select pt.project_task_id as task_id,pt.framework_id as auc_id,t.title,t.description,pt.task_status,pt.project_id,0 as completion_pct,'-' as due_date 
-    from ops_1.project_tasks pt,reference.tasks t where pt.ref_task_id = t.id and pt.project_task_id = ${project_task_id} `
+    let sql = `select pt.project_task_id as task_id,pt.framework_id as auc_id,t.title,t.description,pt.task_status,pt.project_id,0 as completion_pct,pt.task_end_date::timestamp::date as due_date,
+    pt.priority ,case pt.task_owner_id when -1 then '-' else (select concat(oe.first_name,' ',oe.last_name) from ${schema_nm}.org_employees oe where oe.emp_id = pt.task_owner_id) end as task_owner 
+    from ${schema_nm}.project_tasks pt,reference.tasks t where pt.ref_task_id = t.id and pt.project_task_id = ${project_task_id} `
     task = await selectSql(sql);
     if (task.results.length > 0) {
         project_id = task.results[0].project_id;
@@ -39,7 +40,7 @@ router.get('/getTaskDetails/:project_task_id', async (req, res) => {
         let [peoples, technology_assets, vendors, third_party_utilities] = await getScopeDetails(user_id, schema_nm, project_id);
         applicable_assets = { peoples: peoples, technology_assets: technology_assets, vendors: vendors, third_party_utilities: third_party_utilities };
         //get evidence needed
-        sql = `select et.name as evidence_name from ops_1.project_tasks pt,reference.evidence_type et where pt.project_task_id = ${project_task_id} and et.id = any (pt.evidence_type_id)`
+        sql = `select et.name as evidence_name from ${schema_nm}.project_tasks pt,reference.evidence_type et where pt.project_task_id = ${project_task_id} and et.id = any (pt.evidence_type_id)`
         evidence_needed = await selectSql(sql);
         res.send({
             status_code: 'air200', message: 'Success',
