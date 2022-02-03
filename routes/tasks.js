@@ -19,7 +19,7 @@ router.post('/listTasks', async (req, res) => {
         if (task_status != 'all') {
             task_status_condition = ` and pt.task_status = '${task_status}'`;
         }
-        let sql = `select pt.project_task_id,pt.task_status,to_char(pt.created_on,'Mon DD, YYYY') as created_at,t.title,t.description,pt.ref_task_id,pt.task_end_date::timestamp::date as due_date,pt.priority from ${schema_nm}.project_tasks pt,reference.tasks t 
+        let sql = `select pt.project_task_id,pt.task_status,to_char(pt.created_on,'Mon DD, YYYY') as created_at,t.title,t.description,pt.ref_task_id,to_char(pt.task_end_date,'Mon DD, YYYY') as due_date,pt.priority from ${schema_nm}.project_tasks pt,reference.tasks t 
                    where pt.ref_task_id = t.id and t.status = 'A' and pt.project_id = ${project_id} and (pt.created_on::timestamp::date between '${start_date}' and '${end_date}') ${task_status_condition} ${auth_condition}`;
         let resp = await selectSql(sql);
         res.send(resp);
@@ -30,7 +30,7 @@ router.get('/getTaskDetails/:project_task_id', async (req, res) => {
     const { project_task_id } = req.params;
     const schema_nm = req.headers.schema_nm, user_id = req.headers.user_id;
     let task = '', applicable_assets = '', evidence_needed = '', control_mapping = '', project_id = '';
-    let sql = `select pt.project_task_id as task_id,pt.framework_id as auc_id,t.title,t.description,pt.task_status,pt.project_id,0 as completion_pct,pt.task_end_date::timestamp::date as due_date,
+    let sql = `select pt.project_task_id as task_id,pt.framework_id as auc_id,t.title,t.description,pt.task_status,pt.project_id,0 as completion_pct,to_char(pt.task_end_date,'Mon DD, YYYY') as due_date,
     pt.priority ,case pt.task_owner_id when -1 then '-' else (select concat(oe.first_name,' ',oe.last_name) from ${schema_nm}.org_employees oe where oe.emp_id = pt.task_owner_id) end as task_owner 
     from ${schema_nm}.project_tasks pt,reference.tasks t where pt.ref_task_id = t.id and pt.project_task_id = ${project_task_id} `
     task = await selectSql(sql);
