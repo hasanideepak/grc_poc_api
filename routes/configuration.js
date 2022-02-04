@@ -17,6 +17,26 @@ router.post('/setupAccount', async (req, res) => {
   res.send(resp);
 });
 
+router.post('/addProject', async (req,res) => {
+  const {account_id,project_name} = req.body;
+  const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
+  let project_id = 0;
+  let sql = `INSERT INTO ${schema_nm}.projects(account_id,name,status,created_on,created_by) VALUES ('${account_id}','${project_name}','A',NOW(),'${user_id}') RETURNING project_id`;
+  let resp = await insertSql(sql);
+  project_id = resp.message_id.project_id;
+  delete resp.message_id;
+  resp.project_id = project_id;
+  res.send(resp);
+});
+
+router.get('/getProjectsByAccountId/:account_id', async (req,res) => {
+  const {account_id } = req.params;
+  const schema_nm = req.headers.schema_nm;
+  let sql = `select project_id,name as project_name,status from ${schema_nm}.projects where account_id = ${account_id}`;
+  let resp = await selectSql(sql);
+  res.send(resp);
+})
+
 router.post('/addProjectFrameworks', async (req, res) => {
   const { project_id, framework_ids } = req.body;
   const configType = 'framework';

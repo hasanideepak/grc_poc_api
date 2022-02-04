@@ -255,6 +255,18 @@ const SCHEMAS = {
             "required": ["current_password","new_password"],
             // "message": "Custom message"
         }
+    },
+    'addProject': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "account_id": {"type":"number","minLength":1},
+                "project_name": {"type":"string","minLength":1}
+            },
+            "required": ["account_id","project_name"],
+            // "message": "Custom message"
+        }
     }
 };
 
