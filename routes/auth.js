@@ -16,7 +16,7 @@ router.post('/login', async (req, res) => {
             // case coalesce(d.account_id,0) when 0 then 'N' else 'Y' end as is_onboard,au.name as access_role from ${schema_nm}.users a,${schema_nm}.org_employees b,reference.authority au,${schema_nm}.x_project_emp xpe ,${schema_nm}.orgs c left join ${schema_nm}.accounts d on c.org_id = d.org_id 
             // where a.username = '${email}' and a.passwd = '${password}' and a.org_emp_id = b.emp_id and b.emp_id = xpe.emp_id and b.org_id = c.org_id and xpe.authority_id=au.id`;
             let sql = `select a.user_id,a.username as email,a.org_emp_id,concat(b.first_name,' ',b.last_name) as name,b.phone,c.name as org_name,c.logo,c.org_id,
-            case coalesce(d.account_id,0) when 0 then 'N' else 'Y' end as is_onboard, 
+            case coalesce(d.account_id,0) when 0 then 'N' else 'Y' end as is_onboard,coalesce(d.account_id,0) as account_id,coalesce(d.name,'') as account_name,
             case b.super_user when 'Y' then 'CISO' else 
             (select au.name from reference.authority au,${schema_nm}.x_project_emp xpe,${schema_nm}.projects p where au.id = xpe.authority_id and p.project_id = xpe.project_id and p.account_id = d.account_id) end as access_role
             from ${schema_nm}.users a,${schema_nm}.org_employees b,${schema_nm}.orgs c left join ${schema_nm}.accounts d on c.org_id = d.org_id 
