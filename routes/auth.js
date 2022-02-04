@@ -90,7 +90,7 @@ router.post('/changePassword', validateSession, async (req, res) => {
     let resp = await selectSql(sql);
     if (resp.results.length > 0) {
         if (current_password == resp.results[0].passwd) {
-            sql = `update ${schema_nm}.users set passwd = md5('${new_password}') where user_id = ${user_id}`;
+            sql = `update ${schema_nm}.users set passwd = '${new_password}' where user_id = ${user_id}`;
             resp = await updateSql(sql);
             res.status(200).send(resp);
         } else {
