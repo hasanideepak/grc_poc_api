@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.post('/listTasks', async (req, res) => {
     const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
-    const { project_id, authority, start_date, end_date, task_status } = req.body;
-    let auth_condition = '', task_status_condition = ''
+    const { project_id, authority, start_date, end_date, task_status, date_criteria, priority } = req.body;
+    let auth_condition = '', task_status_condition = '', date_condition = '';
     let [authority_id, is_management] = await getAuthorityDetails(authority);
     if (authority_id == 0) {
         res.status(error_resp.Not_Authorized.http_status_code).send(error_resp.Not_Authorized.error_msg);
@@ -19,8 +19,10 @@ router.post('/listTasks', async (req, res) => {
         if (task_status != 'all') {
             task_status_condition = ` and pt.task_status = '${task_status}'`;
         }
-        let sql = `select pt.project_task_id,pt.task_status,to_char(pt.created_on,'Mon DD, YYYY') as created_at,t.title,t.description,pt.ref_task_id,to_char(pt.task_end_date,'Mon DD, YYYY') as due_date,pt.priority from ${schema_nm}.project_tasks pt,reference.tasks t 
-                   where pt.ref_task_id = t.id and t.status = 'A' and pt.project_id = ${project_id} and (pt.created_on::timestamp::date between '${start_date}' and '${end_date}') ${task_status_condition} ${auth_condition}`;
+        date_condition = date_criteria == 'start_date' ? ` and (pt.task_start_date::timestamp::date between '${start_date}' and '${end_date}')` : ` and (pt.task_end_date::timestamp::date between '${start_date}' and '${end_date}')`
+        let sql = `select pt.project_task_id,pt.task_status,to_char(pt.task_start_date,'Mon DD, YYYY') as created_at,t.title,t.description,pt.ref_task_id,to_char(pt.task_end_date,'Mon DD, YYYY') as due_date,pt.priority from ${schema_nm}.project_tasks pt,reference.tasks t 
+                   where pt.ref_task_id = t.id and t.status = 'A' and pt.project_id = ${project_id} and priority = '${priority}' ${date_condition} ${task_status_condition} ${auth_condition}`;
+        // console.log(sql);
         let resp = await selectSql(sql);
         res.send(resp);
     }
