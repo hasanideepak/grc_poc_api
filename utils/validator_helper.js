@@ -9,9 +9,9 @@ export const schemaValidator = async (req) => {
             let subApiName = req.path.replace('/','');
             subApiName = subApiName.split('/')[0];
 
-            // if(subApiName == 'updateIndustry' || subApiName == 'postJob' || subApiName == 'uploadSecureDocument' || subApiName == 'uploadProfilePic' || subApiName == 'logout'){
-            //     resolve({ status_code: 'air200',message:'Success'});
-            // }
+            if(subApiName == 'uploadEvidence' || subApiName == 'logout'){
+                resolve({ status_code: 'air200',message:'Success'});
+            }
 
             if(schema[subApiName] != undefined){
 

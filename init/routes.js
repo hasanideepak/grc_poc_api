@@ -5,6 +5,8 @@ import orgs from '../routes/orgs.js';
 import reference from '../routes/reference.js';
 import configuration from '../routes/configuration.js';
 import tasks from '../routes/tasks.js';
+import evidence from '../routes/evidences.js';
+
 import { saasValidation, schemaValidation, validateSession } from '../utils/middlewares.js';
 
 
@@ -21,6 +23,7 @@ const ROUTES = (server) => {
     server.use('/reference',[schemaValidation,saasValidation,validateSession,],reference);
     server.use('/configuration',[schemaValidation,saasValidation,validateSession,],configuration);
     server.use('/tasks',[schemaValidation,saasValidation,validateSession,],tasks);
+    server.use('/evidences',[schemaValidation,saasValidation,validateSession,],evidence);
 };
 
 export default ROUTES;

@@ -30,7 +30,7 @@ router.post('/listTasks', async (req, res) => {
 
 router.get('/getTaskDetails/:project_task_id', async (req, res) => {
     const { project_task_id } = req.params;
-    const schema_nm = req.headers.schema_nm, user_id = req.headers.user_id;
+    const schema_nm = req.headers.schema_nm, user_id = req.headers.user_id, api_url = process.env.API_URL;
     let task = '', applicable_assets = '', evidence_needed = '', control_mapping = '', project_id = '';
     let sql = `select pt.project_task_id as task_id,pt.framework_id as auc_id,t.title,t.description,pt.task_status,pt.project_id,0 as completion_pct,to_char(pt.task_end_date,'Mon DD, YYYY') as due_date,
     pt.priority ,case pt.task_owner_id when -1 then '-' else (select concat(oe.first_name,' ',oe.last_name) from ${schema_nm}.org_employees oe where oe.emp_id = pt.task_owner_id) end as task_owner 
@@ -42,8 +42,13 @@ router.get('/getTaskDetails/:project_task_id', async (req, res) => {
         let [peoples, technology_assets, vendors, third_party_utilities] = await getScopeDetails(user_id, schema_nm, project_id);
         applicable_assets = { peoples: peoples, technology_assets: technology_assets, vendors: vendors, third_party_utilities: third_party_utilities };
         //get evidence needed
-        sql = `select et.name as evidence_name from ${schema_nm}.project_tasks pt,reference.evidence_type et where pt.project_task_id = ${project_task_id} and et.id = any (pt.evidence_type_id)`
+        sql = `select et.name as evidence_name,et.id as evidence_type_id from ${schema_nm}.project_tasks pt,reference.evidence_type et where pt.project_task_id = ${project_task_id} and et.id = any (pt.evidence_type_id)`
         evidence_needed = await selectSql(sql);
+        for(let i = 0;i<evidence_needed.results.length;i++){
+            sql = `select evidence_id as task_evidence_id,collection_type,evidence_value as file_name,concat('${api_url}','evidences/getEvidence/',split_part(evidence_value,'.',1)) as evidence_url from ${schema_nm}.project_task_evidence where project_task_id = ${project_task_id} and evidence_type_id = ${evidence_needed.results[i].evidence_type_id}`;
+            let resp = await selectSql(sql);
+            evidence_needed.results[i].evidence_uploaded = resp.results;
+        }
         res.send({
             status_code: 'air200', message: 'Success',
             task: task.results,

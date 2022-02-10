@@ -12,7 +12,8 @@ const error = {
     Invalid_User: { http_status_code: 404, error_msg: { status_code: 'air404', message: 'No user found..!' }},
     No_Record: { http_status_code: 404, error_msg: { status_code: 'air404', message: 'No record found..!' }},
     Not_Authorized: { http_status_code: 401, error_msg: { statusCode: 'air401', message: 'You are not authorized to use this service' } },
-    Current_Password_Wrong: { http_status_code: 401, error_msg: { statusCode: 'air401', message: 'Current password is wrong' } }
+    Current_Password_Wrong: { http_status_code: 401, error_msg: { statusCode: 'air401', message: 'Current password is wrong' } },
+    File_Upload_Error: { http_status_code: 502, error_msg: { status_code: 'air502', message: 'Error occured while uploading file to s3' } }
 }
 
 Object.freeze(error);
