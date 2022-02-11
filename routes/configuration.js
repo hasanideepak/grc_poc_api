@@ -71,7 +71,7 @@ router.post('/addKeyMember', async (req, res) => {
   const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
   let vEmpId = 0;
   let emailExists = 'N';
-  let existEmailSql = `select a.emp_id from ops_1.org_employees a where a.email = '${email}';`
+  let existEmailSql = `select a.emp_id from ${schema_nm}.org_employees a where a.email = '${email}';`
   let respExistEmailSql = await selectSql(existEmailSql);
   if(respExistEmailSql.results.length > 0){
     emailExists = 'Y';

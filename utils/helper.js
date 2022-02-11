@@ -55,7 +55,7 @@ export const sendNewUserEmail = async (is_exists, emp_id, project_id, email, use
     (select o.name from ${schema_nm}.projects p2,${schema_nm}.orgs o,${schema_nm}.accounts a where p2.account_id = a.account_id and a.org_id = o.org_id and p2.project_id = ${project_id}) as org_name`;
     let resp = await selectSql(sql);
     let project_name = resp.results[0].project_name, org_name = resp.results[0].org_name;
-    sql = `select nt.subject,nt.body from ops_1.notification_templates nt where nt.template_name = '${template_type}' and nt.status = 'A'`;
+    sql = `select nt.subject,nt.body from ${schema_nm}.notification_templates nt where nt.template_name = '${template_type}' and nt.status = 'A'`;
     resp = await selectSql(sql);
     if (resp.results.length > 0) {
         let msg = resp.results[0].body, subject = resp.results[0].subject;
@@ -71,7 +71,7 @@ export const sendNewUserEmail = async (is_exists, emp_id, project_id, email, use
             app_url = `${app_url}resetpassword/${token}`;
             msg = msg.replace('[link]', app_url);
             sql = `insert into ${schema_nm}.password_token(created_on,status,token,user_id,expiry_in_sec)
-            select now(),'A','${token}',u.user_id,0 from ops_1.users u where u.org_emp_id = ${emp_id}`;
+            select now(),'A','${token}',u.user_id,0 from ${schema_nm}.users u where u.org_emp_id = ${emp_id}`;
             resp = await insertSql(sql);
         }
         console.log('sending email with subject ',subject);

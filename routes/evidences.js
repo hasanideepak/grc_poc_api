@@ -14,7 +14,7 @@ let storage = multer.memoryStorage({
     }
 });
 
-let multipleUpload = multer({ storage: storage }).array('file');
+let multipleUpload = multer({ storage: storage }).any();
 let upload = multer({ storage: storage }).single('file');
 
 const BUCKET_NAME = process.env.S3_BUCKET;
