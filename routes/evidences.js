@@ -36,7 +36,7 @@ router.post('/uploadEvidence/:evidence_type/:project_task_id', multipleUpload, a
     file.map(async (item) => {
         let file_name = await generateUUID();
         let ext = path.extname(item.originalname);
-        let myKey = `${file_name}${ext}`;
+        let myKey = item.originalname;//`${file_name}${ext}`;
         let params = {
             Bucket: BUCKET_NAME,
             Key: myKey,
