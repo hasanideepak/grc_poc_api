@@ -10,6 +10,24 @@ export const createAuthToken = async (user_id, schema_nm) => {
     return token;
 }
 
+export const generateOTP = async (user_id, email, user_name, schema_nm) => {
+    let otp = Math.floor(100000 + Math.random() * 900000);
+    let sql = `insert into ${schema_nm}.password_token(created_on,status,token,user_id,type)
+    values(now(),'A','${otp}',${user_id},'otp')`;
+    let resp = await insertSql(sql);
+    await sendOTP(otp,email,user_name,schema_nm);
+    return otp;
+}
+
+export const sendOTP = async (otp,email,user_name,schema_nm) => {
+    let sql = `select nt.subject,nt.body from ${schema_nm}.notification_templates nt where nt.template_name = 'auth_otp' and nt.status = 'A'`;
+    let resp = await selectSql(sql);
+    let msg = resp.results[0].body, subject = resp.results[0].subject;
+    msg = msg.replace('[user]', user_name);
+    msg = msg.replace('[OTP]', otp);
+    email_service.Send({ 'from': 'support@accorian.com', 'subject': subject, 'html': msg, 'to': email })
+}
+
 export const generateUUID = async () => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -49,7 +67,7 @@ export const getScopeDetails = async (user_id, schema_nm, project_id) => {
 }
 
 export const sendNewUserEmail = async (is_exists, emp_id, project_id, email, user_name, schema_nm, template_type) => {
-    console.log('sending email to ',email);
+    console.log('sending email to ', email);
     let app_url = process.env.APP_URL;
     let sql = `select (select p.name from ${schema_nm}.projects p where p.project_id = ${project_id}) as project_name,
     (select o.name from ${schema_nm}.projects p2,${schema_nm}.orgs o,${schema_nm}.accounts a where p2.account_id = a.account_id and a.org_id = o.org_id and p2.project_id = ${project_id}) as org_name`;
@@ -63,7 +81,7 @@ export const sendNewUserEmail = async (is_exists, emp_id, project_id, email, use
         msg = msg.replace('[client_name]', org_name);
         msg = msg.replace('[project_name]', project_name);
         msg = msg.replace('[user_email]', email);
-        console.log('is_exists',is_exists);
+        console.log('is_exists', is_exists);
         if (is_exists == 'Y') {
             msg = msg.replace('[link]', `${app_url}login`);
         } else {
@@ -74,7 +92,7 @@ export const sendNewUserEmail = async (is_exists, emp_id, project_id, email, use
             select now(),'A','${token}',u.user_id,0 from ${schema_nm}.users u where u.org_emp_id = ${emp_id}`;
             resp = await insertSql(sql);
         }
-        console.log('sending email with subject ',subject);
+        console.log('sending email with subject ', subject);
         email_service.Send({ 'from': 'support@accorian.com', 'subject': subject, 'html': msg, 'to': email })
     }
 }

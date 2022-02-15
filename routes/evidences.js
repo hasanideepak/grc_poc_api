@@ -36,7 +36,8 @@ router.post('/uploadEvidence/:evidence_type/:project_task_id', multipleUpload, a
     file.map(async (item) => {
         let file_name = await generateUUID();
         let ext = path.extname(item.originalname);
-        let myKey = item.originalname;//`${file_name}${ext}`;
+        let original_file_name = item.originalname;
+        let myKey = `${file_name}${ext}`;
         let params = {
             Bucket: BUCKET_NAME,
             Key: myKey,
@@ -48,8 +49,8 @@ router.post('/uploadEvidence/:evidence_type/:project_task_id', multipleUpload, a
                 res.status(error_resp.File_Upload_Error.http_status_code).send(error_resp.File_Upload_Error.error_msg);
             } else {
                 ResponseData.push(data);
-                let sql = `insert into ${schema_nm}.project_task_evidence(project_task_id,evidence_type_id,collection_type,evidence_value,status,created_on,created_by)
-                               values(${project_task_id},${evidence_type},'manual','${myKey}','A',now(),'${user_id}')`;
+                let sql = `insert into ${schema_nm}.project_task_evidence(project_task_id,evidence_type_id,collection_type,evidence_value,original_file_name,status,created_on,created_by)
+                               values(${project_task_id},${evidence_type},'manual','${myKey}','${original_file_name}','A',now(),'${user_id}')`;
                 let resp = await insertSql(sql);
                 if (ResponseData.length == file.length) {
                     res.status(200).send({ status_code: 'air200', message: 'Success' });
@@ -63,7 +64,7 @@ router.get('/listEvidences/:project_id', async (req,res) => {
     const schema_nm = req.headers.schema_nm,api_url = process.env.API_URL;
     let project_id_cond = '';
     project_id_cond = project_id == '-1' ? '' : ` and pt.project_id = ${project_id}`;
-    let sql = `select pt.project_task_id, pte.evidence_value as file_name, to_char(pte.created_on ,'Mon DD, YYYY') as uploaded_on,concat(oe.first_name,' ',oe.last_name) as uploaded_by,
+    let sql = `select pt.project_task_id, pte.original_file_name as file_name, to_char(pte.created_on ,'Mon DD, YYYY') as uploaded_on,concat(oe.first_name,' ',oe.last_name) as uploaded_by,
     concat('${api_url}','evidences/getEvidence/',split_part(pte.evidence_value,'.',1)) as evidence_url, etype.name as evidence_type 
     from ${schema_nm}.project_tasks pt , ${schema_nm}.project_task_evidence pte, ${schema_nm}.users u , ${schema_nm}.org_employees oe, reference.evidence_type etype 
     where pt.project_task_id = pte.project_task_id ${project_id_cond} and u.org_emp_id = oe.emp_id and cast(pte.created_by as integer) = u.user_id and pte.evidence_type_id = etype.id`

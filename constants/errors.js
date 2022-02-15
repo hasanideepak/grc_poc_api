@@ -13,7 +13,9 @@ const error = {
     No_Record: { http_status_code: 404, error_msg: { status_code: 'air404', message: 'No record found..!' }},
     Not_Authorized: { http_status_code: 401, error_msg: { statusCode: 'air401', message: 'You are not authorized to use this service' } },
     Current_Password_Wrong: { http_status_code: 401, error_msg: { statusCode: 'air401', message: 'Current password is wrong' } },
-    File_Upload_Error: { http_status_code: 502, error_msg: { status_code: 'air502', message: 'Error occured while uploading file to s3' } }
+    File_Upload_Error: { http_status_code: 502, error_msg: { status_code: 'air502', message: 'Error occured while uploading file to s3' } },
+    Invalid_OTP: { http_status_code: 401, error_msg: { status_code: 'air401', message: 'Your OTP is wrong or expired, please try login again' } },
+    No_OTP: { http_status_code: 401, error_msg: { status_code: 'air401', message: 'OTP is not yet generated, please try login again' } },
 }
 
 Object.freeze(error);

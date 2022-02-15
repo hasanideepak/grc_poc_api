@@ -279,6 +279,18 @@ const SCHEMAS = {
             "required": ["data"],
             // "message": "Custom message"
         }
+    },
+    'validateOTP': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "otp": {"type":"string","minLength":1}
+            },
+            "required": ["otp"],
+            // "message": "Custom message"
+        }
+
     }
 };
 
