@@ -1,7 +1,7 @@
 import express from 'express';
 import error_resp from '../constants/errors.js'
 import { getAuthorityDetails, getScopeDetails } from '../utils/helper.js';
-import { selectSql,updateSql } from '../utils/pg_helper.js';
+import { selectSql, updateSql } from '../utils/pg_helper.js';
 
 const router = express.Router();
 
@@ -34,16 +34,9 @@ router.get('/getTaskDetails/:project_task_id', async (req, res) => {
     let task = '', applicable_assets = '', evidence_needed = '', control_mapping = '', project_id = '';
     let sql = `select pt.project_task_id as task_id,pt.framework_id as auc_id,t.title,t.description,pt.task_status,pt.project_id,0 as completion_pct,to_char(pt.task_end_date,'Mon DD, YYYY') as due_date,
     pt.priority ,case pt.task_owner_id when -1 then '-' else (select concat(oe.first_name,' ',oe.last_name) from ${schema_nm}.org_employees oe where oe.emp_id = pt.task_owner_id) end as task_owner,
-    case pt.task_owner_id when -1 then '-' else (select name from reference.authority join ops_1.x_project_emp on reference.authority.id = ops_1.x_project_emp.authority_id
-        join ops_1.project_tasks on ops_1.x_project_emp.project_id = ops_1.project_tasks.project_id 
-        where ops_1.x_project_emp.project_id = pt.project_id AND ops_1.x_project_emp.emp_id = pt.task_owner_id AND ops_1.project_tasks.project_task_id = ${project_task_id}) end as authority,
-        case pt.project_task_id when -1 then '-' else (select CASE
-            WHEN ops_1.project_tasks.frequency_duration = 1 AND ops_1.project_tasks.frequency_unit = 'year' THEN 'Yearly'
-            WHEN ops_1.project_tasks.frequency_duration = 1 AND ops_1.project_tasks.frequency_unit = 'month' THEN 'Monthly'
-            WHEN ops_1.project_tasks.frequency_duration = 7 AND ops_1.project_tasks.frequency_unit = 'day' THEN 'Weekly'
-            ELSE '-' END from ops_1.project_tasks where ops_1.project_tasks.project_task_id = ${project_task_id}
-        ) end as task_frequency
-    from ${schema_nm}.project_tasks pt,reference.tasks t where pt.ref_task_id = t.id and pt.project_task_id = ${project_task_id} `
+    case pt.task_owner_id when -1 then '-' else (select a.name from reference.authority a,${schema_nm}.x_project_emp xpe,${schema_nm}.project_tasks pt where pt.project_id = xpe.project_id and xpe.authority_id = a.id and pt.project_task_id = ${project_task_id} and xpe.emp_id = pt.task_owner_id) end as authority,
+    case pt.frequency_unit when 'year' then 'Yearly' when 'month' then 'Monthly' else 'Weekly' end as task_frequency
+    from ${schema_nm}.project_tasks pt,reference.tasks t where pt.ref_task_id = t.id and pt.project_task_id = ${project_task_id}`
     task = await selectSql(sql);
 
     if (task.results.length > 0) {
@@ -70,34 +63,33 @@ router.get('/getTaskDetails/:project_task_id', async (req, res) => {
     }
 });
 
-router.post('/updateTaskDetails/:project_task_id',async(req,res)=>{
+router.post('/updateTaskDetails/:project_task_id', async (req, res) => {
     const user_id = req.headers.user_id, schema_nm = req.headers.schema_nm;
     const { data } = req.body;
-    const task_id = req.params.project_task_id
-
-    
-    
-    if(Object.keys(data).length !== 0) {
-        let sql = 'UPDATE ops_1.project_tasks SET '
+    const { project_task_id } = req.params;
+    if (Object.keys(data).length !== 0) {
+        let sql = `UPDATE ${schema_nm}.project_tasks SET `
         let i = 1;
         for (let [key, value] of Object.entries(data)) {
-            sql += ` ${key} = ${value}`
-            if(i === Object.keys(data).length){
-                sql += ``
-            }else{
-                sql += `, `
+            if (key == 'task_status' || key == 'task_end_date' || key == 'priority') {
+                sql = `${sql} ${key} = ${value}`
+                if (i === Object.keys(data).length) {
+                    sql = `${sql}`
+                } else {
+                    sql = `${sql},`
+                }
+                i++;
             }
-            i++;
-          }
-          sql += ` where ops_1.project_tasks.project_task_id =${task_id}`
-          let resp = await updateSql(sql,);
-          res.send(resp);
-        }else{
-            res.send({ status_code: 'air200', message: 'No data updated.'});
         }
+        sql = `${sql} where project_task_id =${project_task_id}`
+        let resp = await updateSql(sql,);
+        res.send(resp);
+    } else {
+        res.send({ status_code: 'air200', message: 'No data updated.' });
+    }
 
-    
-     
+
+
 
 })
 export default router;
