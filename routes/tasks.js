@@ -48,7 +48,7 @@ router.get('/getTaskDetails/:project_task_id', async (req, res) => {
         sql = `select et.name as evidence_name,et.id as evidence_type_id from ${schema_nm}.project_tasks pt,reference.evidence_type et where pt.project_task_id = ${project_task_id} and et.id = any (pt.evidence_type_id)`
         evidence_needed = await selectSql(sql);
         for (let i = 0; i < evidence_needed.results.length; i++) {
-            sql = `select evidence_id as task_evidence_id,collection_type,evidence_value as file_name,concat('${api_url}','evidences/getEvidence/',split_part(evidence_value,'.',1)) as evidence_url from ${schema_nm}.project_task_evidence where project_task_id = ${project_task_id} and evidence_type_id = ${evidence_needed.results[i].evidence_type_id}`;
+            sql = `select evidence_id as task_evidence_id,collection_type,original_file_name as file_name,concat('${api_url}','evidences/getEvidence/',split_part(evidence_value,'.',1)) as evidence_url from ${schema_nm}.project_task_evidence where project_task_id = ${project_task_id} and evidence_type_id = ${evidence_needed.results[i].evidence_type_id}`;
             let resp = await selectSql(sql);
             evidence_needed.results[i].evidence_uploaded = resp.results;
         }
