@@ -267,6 +267,18 @@ const SCHEMAS = {
             "required": ["account_id","project_name"],
             // "message": "Custom message"
         }
+    },
+    'updateTaskDetails': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "data": {"type":"object"},
+                
+            },
+            "required": ["data"],
+            // "message": "Custom message"
+        }
     }
 };
 

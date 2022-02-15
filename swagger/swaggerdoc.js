@@ -1795,7 +1795,7 @@ const SwaggerModels = () => {
                   },
                   utilities_ids: {
                     type: 'array',
-                    example: [15,16],
+                    example: [15, 16],
                     required: true
                   }
                 }
@@ -2078,6 +2078,219 @@ const SwaggerModels = () => {
               description: 'Vendor ID',
               example: 2
             }],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/tasks/listTasks': {
+        get: {
+          tags: [
+            'Tasks',
+          ],
+          summary: 'Get list of tasks.',
+          description: `
+            Description     : Get list of tasks.
+            Sample Url      : ${baseURL}tasks/listTasks`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide project id, connector id, and token details.',
+              schema: {
+                type: 'object',
+                properties: {
+                  project_id: {
+                    type: 'number',
+                    example: 15,
+                    required: true
+                  },
+                  authority: {
+                    type: 'string',
+                    example: 'System Admin',
+                    required: true
+                  },
+                  start_date: {
+                    type: 'string',
+                    example: '01/24/2022',
+                    required: true
+                  },
+                  end_date: {
+                    type: 'string',
+                    example: '01/24/2022',
+                    required: true
+                  },
+                  task_status: {
+                    type: 'string',
+                    example: 'pending',
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/tasks/getTaskDetails': {
+        get: {
+          tags: [
+            'Tasks',
+          ],
+          summary: 'Get task details.',
+          description: `
+            Description     : Get task details
+            Sample Url      : ${baseURL}tasks/getTaskDetails`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'parameter',
+              name: 'project_task_id',
+              schema: {
+                type: 'number',
+              },
+              required: 'true',
+              description: 'Task ID',
+              example: 700073
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  },
+                  task: {
+                    type: 'object'
+                  },
+                  applicable_assets: {
+                    type: 'object'
+                  },
+                  evidence_needed: {
+                    type: 'object'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/tasks/updateTaskDetails': {
+        post: {
+          tags: [
+            'Tasks',
+          ],
+          summary: 'Update task details.',
+          description: `
+            Description     : Update task details.
+            Sample Url      : ${baseURL}tasks/updateTaskDetails`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'parameter',
+              name: 'project_task_id',
+              schema: {
+                type: 'number',
+              },
+              required: 'true',
+              description: 'Task ID',
+              example: 700074
+            },
+            {
+              in: 'body',
+              name: 'Request Body',
+              description: 'Provide project id, connector id, and token details.',
+              schema: {
+                type: 'object',
+                properties: {
+                  data: {
+                    type: 'object',
+                    example:
+                      { "priority": "'low'", "task_owner_id": "400051", "task_end_date": "2022-03-01 09:26:19.18+00", "task_status": "pending" }
+                    ,
+                    required: true
+                  }
+                }
+              }
+            }
+          ],
           responses: {
             '200': {
               description: 'Success!',
