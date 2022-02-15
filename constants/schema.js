@@ -267,6 +267,17 @@ const SCHEMAS = {
             "required": ["account_id","project_name"],
             // "message": "Custom message"
         }
+    },
+    'validateOTP': {
+        schema:
+        {
+            "type": "object",
+            "properties": {
+                "otp": {"type":"string","minLength":1}
+            },
+            "required": ["otp"],
+            // "message": "Custom message"
+        }
     }
 };
 
