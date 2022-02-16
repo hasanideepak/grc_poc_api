@@ -29,17 +29,31 @@ router.post('/login', async (req, res) => {
                 let results = { user: result };
                 results.accessToken = accesstoken;
                 results.tokenType = 'Bearer';
-                let response = { statusCode: 'air200', message: 'Success', results: results };
-                res.status(200).send(response);
-            } else {
-                res.status(error_resp.Bad_Credentials.http_status_code).send(error_resp.Bad_Credentials.error_msg);
+                
+                let org_id = result.org_id
+                let org_module_ids = []
+                if (org_id !== null && org_id !== 0 && org_id !== '') {
+                    let orgModuleSql = `select module_id from ${schema_nm}.org_modules where org_id = ${org_id}`
+                    let respOrgModuleSql = await selectSql(orgModuleSql);
+                    
+                    for (var i = 0; i < respOrgModuleSql.results.length; i++) {
+                        var module_id = respOrgModuleSql.results[i].module_id;
+                        org_module_ids.push(module_id);
+                    }
             }
+            results.user.org_modules = org_module_ids
+
+            let response = { statusCode: 'air200', message: 'Success', results: results };
+            res.status(200).send(response);
         } else {
-            res.status(error_resp.Invalid_Password.http_status_code).send(error_resp.Invalid_Password.error_msg);
+            res.status(error_resp.Bad_Credentials.http_status_code).send(error_resp.Bad_Credentials.error_msg);
         }
     } else {
-        res.status(error_resp.Email_Required.http_status_code).send(error_resp.Email_Required.error_msg);
+        res.status(error_resp.Invalid_Password.http_status_code).send(error_resp.Invalid_Password.error_msg);
     }
+} else {
+    res.status(error_resp.Email_Required.http_status_code).send(error_resp.Email_Required.error_msg);
+}
 });
 
 router.post('/forgot_password', async (req, res) => {
@@ -125,8 +139,8 @@ router.get('/resendOTP', validateSession, async (req, res) => {
         let otp = resp.results[0].otp;
         sql = `select a.username as email,concat(b.first_name,' ',b.last_name) as user_name from ${schema_nm}.users a,${schema_nm}.org_employees b where a.org_emp_id = b.emp_id and a.user_id = ${user_id}`;
         resp = await selectSql(sql);
-        let user_name = resp.results[0].user_name,email = resp.results[0].email;
-        await sendOTP(otp,email,user_name,schema_nm);
+        let user_name = resp.results[0].user_name, email = resp.results[0].email;
+        await sendOTP(otp, email, user_name, schema_nm);
         res.status(200).send({ status_code: 'air200', message: 'Success' });
     } else {
         res.status(error_resp.No_OTP.http_status_code).send(error_resp.No_OTP.error_msg);

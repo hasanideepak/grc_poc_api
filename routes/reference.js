@@ -33,4 +33,22 @@ router.get('/getThirdPartyConnectors', async (req,res) => {
     res.send(resp);
 })
 
+router.get('/getModules', async (req,res) => {
+    let sql = `select module_id,module_name,status from reference.modules where status ='A'`;
+    let resp = await selectSql(sql);
+    res.send(resp);
+})
+
+router.get('/getControlDomains', async (req,res) => {
+    let sql = `select id,name,status from reference.domains where status ='A'`;
+    let resp = await selectSql(sql);
+    res.send(resp);
+})
+
+router.get('/getControlCriteria', async (req,res) => {
+    let sql = `select id,name, status from reference.criteria where status ='A'`;
+    let resp = await selectSql(sql);
+    res.send(resp);
+})
+
 export default router;

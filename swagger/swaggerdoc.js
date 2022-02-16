@@ -2311,6 +2311,165 @@ const SwaggerModels = () => {
           }
         }
       },
+      '/reference/getModules': {
+        get: {
+          tags: [
+            'Reference',
+          ],
+          summary: 'Get All Modules',
+          description: `
+            Description     : Get All Modules.
+            Sample Url      : ${baseURL}reference/getModules`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation.',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            }],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/reference/getControlDomains': {
+        get: {
+          tags: [
+            'Reference',
+          ],
+          summary: 'Get All Control Domains',
+          description: `
+            Description     : Get All Control Domains.
+            Sample Url      : ${baseURL}reference/getControlDomains`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation.',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            }],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      '/reference/getControlCriteria': {
+        get: {
+          tags: [
+            'Reference',
+          ],
+          summary: 'Get All Control Criterias',
+          description: `
+            Description     : Get All Control Criterias.
+            Sample Url      : ${baseURL}reference/getControlCriteria`,
+          produces: [
+            'application/json'
+          ],
+          parameters: [
+            {
+              in: 'header',
+              name: 'Authorization',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'accessToken provided in the response of login api',
+              example: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            },
+            {
+              in: 'header',
+              name: 'apikey',
+              schema: {
+                type: 'string',
+              },
+              required: 'true',
+              description: 'API key provided for SAAS implementation.',
+              example: 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIwMzE1MCwiaWF0IjoxNjI5MjkyOTI4'
+            }],
+          responses: {
+            '200': {
+              description: 'Success!',
+              'schema': {
+                type: 'object',
+                properties: {
+                  status_code: {
+                    type: 'string',
+                    example: 'air200'
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Success'
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       // '/reference/getOrgTypes': {
       //   get: {
       //     tags: [
